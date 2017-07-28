@@ -1,0 +1,76 @@
+# source /home/zyq3e/notes/.preshellrc
+# dir='/usr/bin'; case ":$PATH:" in *$dir*) ;; *) export PATH="$dir:$PATH" ;; esac
+# fix bash on windows
+
+# ~/notes/task/bash/meta_source.sh
+meta_s() {
+if [ -n "$ZSH_VERSION" ]; then
+    eval ' s() { source "${(%):-%x}"; }'
+elif [ -n "$BASH_VERSION" ]; then
+    eval 'CALLER="${BASH_SOURCE[1]}"; s() { source "$CALLER"; }'
+fi
+}
+
+export h1='qeatzy@39.98.211.228'    # macheng 2019.08
+h0=root@207.246.69.79
+proxy () {
+    case $1 in
+        -k)
+            unset http_proxy
+            unset https_proxy
+            echo "HTTP Proxy off"
+            ;; -[nh])
+            [ $http_proxy ] && echo "HTTP Proxy on" || echo "HTTP Proxy off";
+            ;; -[q])
+            [ $http_proxy ] && echo "$http_proxy $https_proxy" || echo "HTTP Proxy off";
+            ;; *)
+            export http_proxy="http://127.0.0.1:1082"
+            export https_proxy="http://127.0.0.1:1082"
+            echo "HTTP Proxy on"
+    esac
+}
+alias to=proxy
+
+# task/bash/s0.sh
+ms() {
+    num="$1";
+    _h0="$2"
+    if num=$((num+0)) && [ -n "$_h0" ]; then
+        case "$_h0" in *@*) ;; *) _h0="root@$_h0";; esac
+        echo "export h$num=$_h0 ip$num='${_h0#*@}' u0='${_h0%%@*}'";
+        shift 2;
+        # echo $# args
+        # set -x
+        if [ $# -eq 0 ]; then
+            ssh "$_h0";
+        elif [ $# -eq 1 ] && [ "$1" = a ]; then
+            ssh "$_h0" -t "tmux a || tmux";
+        else
+            ssh "$_h0" -t "$@";
+        fi
+    else
+        return 23
+    fi
+    return $?
+}
+for i in {0..5}; do
+    if eval "[ \$h$i ]"; then
+        eval "s$i() { ms $i \$h$i \"\$@\"; }"
+        # echo has h$i;
+    fi
+done
+
+
+min () { setid mintty --dir "${1:-$PWD}"; }
+
+ep() { d="${2:-:}"; p="${1:-$PATH}$d"; while [ "$p" ]; do echo "${p%%$d*}"; p="${p#*$d}"; done; };
+
+co() { "$HOME/notes/swo/rc/color/themes_raw.py" "$@"; }
+mt() { mintheme "$@"; }
+alias c='python3 $HOME/notes/swo/rc/color/mtc.py'
+
+t() { [ $# -lt 1 ] && tmux || tmux a -t "$@"; }
+alias t0='tmux a -t 0'
+alias t1='tmux a -t 1'
+
+# vim: ft=sh

@@ -1,0 +1,2 @@
+Transparency Enhancement · Issue #501 · mintty/mintty · GitHub
+https://github.com/mintty/mintty/issues/501

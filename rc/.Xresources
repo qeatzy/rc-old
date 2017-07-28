@@ -1,0 +1,49 @@
+! 
+! echo '#include "notes/swo/rc/.Xresources"' >> ~/.Xresources
+
+urxvt.scrollBar: false
+rxvt*font: -*-consolas-medium-*-*-*-16-*-*-*-*-*-*-*
+! font from  https://gist.github.com/jeantil/523190
+URxvt.geometry: 190x100+280+200
+! http://www.cnblogs.com/chjbbs/p/6389987.html
+
+! https://stackoverflow.com/questions/3633052/alt-b-alt-f-does-not-work-in-xterm
+xterm*metaSendsEscape: true
+
+xterm*locale:zh_CN.UTF-8
+xterm*faceName: Ubuntu Mono
+xterm*faceSize: 20
+xterm*renderFont: true
+
+xterm*VT100.Translations: #override \
+    Shift <KeyPress> Insert: insert-selection(CLIPBOARD) \n\
+    Ctrl Shift <Key>V:    insert-selection(CLIPBOARD) \n\
+    Ctrl Shift <Key>C:    copy-selection(CLIPBOARD) \n\
+    Ctrl <Key> minus: smaller-vt-font() \n\
+    Ctrl <Key> plus: larger-vt-font() \n\
+    Ctrl <Key> 0: set-vt-font(d) \n\
+    Ctrl <Btn1Up>: exec-formatted("xdg-open '%t'", PRIMARY)
+
+
+! XTerm配置与中文乱码解决方案 https://segmentfault.com/a/1190000002996567
+! 1. 中文乱码问题
+xterm*locale:zh_CN.UTF-8
+xterm*faceName:Consolas:antialias=True:pixelsize=14
+xterm*faceNameDoublesize:WenQuanYi Zen Hei:antialias=True:pixelsize=14
+! XTerm*faceNameDoublesize: WenQuanYi Bitmap Song
+! 为什么xterm(archlinux下)里用consolas字体不能显示一些特殊符号？ https://www.zhihu.com/question/20881310
+XTerm*faceSize: 11
+! archlinux下Xterm终端，中文乱码的解决办法 (2013-08-26 23:45:50) 转载 ▼  http://blog.sina.com.cn/s/blog_7bac5d250101hz6h.html
+! --英文字体
+! xterm*faceName:DejaVu Sans Mono:antialias=True:pixelsize=14
+! --中文字体
+! xterm*faceNameDoublesize:WenQuanYi Micro Hei:antialias=True:pixelsize=14
+!
+! 2. xterm配置
+xterm*foreground:rgb:b2/b2/b2
+xterm*background:rgb:08/08/08
+xterm*scaleHeight: 1.01
+xterm*geometry:200x64
+xterm*dynamicColors:true
+
+! swo/rc/.Xresources, see swo/rc/.xinitrc

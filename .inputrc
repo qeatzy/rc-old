@@ -1,0 +1,55 @@
+# set editing-mode for all readline based tool, for example bash, not zsh.
+#+ in bash only, 'set -o vi' also suffices.
+#+ 'bind -P' to check key bindings.
+#+ to see currently active key bindings, 
+#+ "bind -p | grep -v '^#\|self-insert\|^$'"
+#+ do that in both insert and comand mode.
+# set editing-mode vi   # this line break many app that use readline, eg, sqlite3
+#set keymap vi-command
+# editing-mode can be set to either emacs or vi.
+# man readline
+#set keymap vi-insert
+# Tab: complete
+"\e[Z": "\e-1\C-i"
+# bind -P
+
+$if mode=vi
+	set keymap vi-command
+	"gg": beginning-of-history
+	"G": end-of-history
+	".": insert-last-argument
+	set keymap vi-insert
+	"kj": vi-movement-mode
+    "\C-i": complete
+	# "\C-p": history-search-backward
+    "\C-h": backward-delete-char
+	"\C-w": backward-kill-word
+	"\C-a": beginning-of-line
+	"\C-e": end-of-line
+    "\C-f":forward-char
+    "\C-b":backward-char
+    "\e.":yank-last-arg
+    "\ef":forward-word
+    "\eb":backward-word
+	"\C-l": clear-screen
+$else
+    # "\ef":forward-word
+    # "\eb":backward-word
+    "\C-p":history-search-backward
+    "\C-n":history-search-forward
+$endif
+
+
+set show-mode-in-prompt on
+set show-all-if-ambiguous on
+set completion-ignore-case on
+#set bell-style none
+
+# windows shell 配置记 https://www.douban.com/note/170085157/
+set meta-flag on
+set input-meta on
+set output-meta on
+set convert-meta off 
+
+# .inputrc, copy or append below line to ~/.inputrc, seems relative directory not work, eg '$HOME/notes/.inputrc'
+# $include /cygdrive/e/notes/.inputrc

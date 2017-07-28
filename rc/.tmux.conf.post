@@ -1,0 +1,40 @@
+
+set -s command-alias[11] rw='rename-window'         # tmux 2.4
+set -s command-alias[50] co='source-file'
+man tmux
+
+
+tmux set -g status-left-length 40
+tmux show -g
+!tmux unbind -n q
+!tmux bind -n q detach\; send-keys d d
+
+py3 print(a); a+=1;os.system("tmux set -g status-left '#[bg=colour{}]      #[bg=colour{}]      #[bg=colour{}]      '".format(a*5-3,a*4-2,a*4-1,a*4))
+py3 print(a); a+=1;os.system("tmux set -g status-left '#[bg=colour{}]       #[bg=colour{}]      #[bg=colour{}]     #[bg=colour{}]'".format(255-a*4-3,a*4-2,175-a*4-1,a*4))
+py3 print(a); a+=1;os.system("tmux set -g status-left '#[bg=colour{}]       #[bg=colour{}]      #[bg=colour{}]     #[bg=colour{}]'".format(7,3,1,0))
+py3 print(a); a+=1;os.system("tmux set -g status-left '#[bg=colour{}]                            #[fg=colour255]#[bg=colour{}]                            #[fg=colour255]#[bg=colour{}]                            #[fg=colour255]'".format(a*3-2,a*3-1,a*3))
+py3 print(a); a+=1;os.system("tmux set -g status-left '#[bg=colour{}]                            #[fg=colour255]#[bg=colour{}]                            #[fg=colour255]#[bg=colour{}]                            #[fg=colour255]'".format(7,3,1,0))
+py3 print(a); a+=1;os.system("tmux set -g status-left '#[bg=colour{}]#[fg=colour255]                            #[bg=colour{}]#[fg=colour255]                            #[bg=colour{}]#[fg=colour255]                            '".format( 24,160,248))
+
+
+nmap f qr
+tmux set -g status-right ' #[fg=colour91]aa#[bg=colour23] #[fg=colour2]#(echo 666) #[fg=colour1] #[fg=colour3]bb #[bg=colour3]#[fg=colour0] #(echo 999) #[bg=colour3]#[fg=colour1]cc #[bg=colour1]#[fg=colour0] %b %d %H:%M '
+tmux set -g status-right ' #[fg=colour91]aa#[bg=colour23] #[fg=colour2]#(echo 666) #[fg=colour1] #[fg=colour3]bb #[bg=colour3]#[fg=colour0] #(echo 999) #[bg=colour3]#[fg=colour1]cc #[bg=colour1]#[fg=colour0] %b %d %H:%M '
+
+tmux set -g status-right ' #[fg=colour7]aa#[bg=colour7] #[fg=colour2]#(echo 666) #[fg=colour1] #[fg=colour3]bb #[bg=colour3]#[fg=colour0] #(echo 999) #[bg=colour3]#[fg=colour1]cc #[bg=colour1]#[fg=colour0] %b %d %H:%M '
+
+tmux set -g status-right '
+#[fg=colour7]aa#[bg=colour7] 
+#[fg=colour2]#(echo 666) 
+#[fg=colour1]
+#[fg=colour3]bb
+#[bg=colour3]#[fg=colour0] #(echo 999)
+#[bg=colour3]#[fg=colour1]cc
+#[bg=colour1]#[fg=colour0] %b %d %H:%M '
+tmux set status-right-length 0
+tmux set status-left-length 0
+tmux set window-status-current-format "#[fg=colour0]#[bg=colour4]#[fg=colour7]#[bg=colour4] #I* #[fg=colour7] #W #[fg=colour4]#[bg=colour0]"
+tmux set window-status-current-format ""
+py3 a,n = 0, 12; os.system("tmux set status-left-length {}".format(5*n))
+py3 print(a); a+=1; _=os.system("tmux set -g status-left '" + "".join ("#[fg=colour255]#[bg=colour{}] {:3d} ".format(x,x) for x in (n*a+i for i in range(1-n,1))) + "'")
+py3 print(a); a-=1; _=os.system("tmux set -g status-left '" + "".join ("#[fg=colour255]#[bg=colour{}] {:3d} ".format(x,x) for x in (n*a+i for i in range(1-n,1))) + "'")

@@ -1,0 +1,43 @@
+ ScrollColors https://www.vim.org/scripts/script.php?script_id=1488
+known from https://stackoverflow.com/questions/7331940/how-to-get-the-list-of-all-installed-color-schemes-in-vim
+
+https://jeffkreeftmeijer.com/vim-16-color/
+https://github.com/jeffkreeftmeijer/vim-dim
+4-bit Vim color schemes like Noctu and Dim exclusively use the first sixteen relative ANSI colors. 
+https://raw.githubusercontent.com/noahfrederick/vim-noctu/master/colors/noctu.vim
+
+https://stackoverflow.com/questions/50753746/need-some-clarification-on-tmux
+    it is very likely that you are using a truecolor colorscheme and tmux cannot support that.
+
+https://stackoverflow.com/a/33553372/3625404
+hi Normal    guifg=#e6e1de ctermfg=none gui=none
+hi LineNr    guifg=#e6e1de ctermfg=none gui=none
+    If you want the background of the line-numbers to change as well (It looks weird if it doesn't) apply the LineNr settings the same you did to the Normal settings (make sure it doesn't specify ctermbg or guibg) - Augusto May 14 at 14:13
+
+h search(
+h match(
+
+func! SynGroup()
+    let s = synID(line('.'), col('.'), 1)
+    let from = ''
+    let to = ''
+    if s != 0
+        let from = synIDattr(l:s, 'name')
+        let to = synIDattr(synIDtrans(l:s), 'name')
+        let r = Capture('hi ' . to)
+        let r = matchstr(r, '\(ctermfg=\)\@<=\S*')
+        let co = (from . ' -> ' . to . '  :' . r)
+        let g:co = co . ' ' . g:colors_name
+    endif
+    echo s ? (s . ' ' . co) : '0'
+    " echo s synIDattr(l:s, 'name') . ' -> ' . synIDattr(synIDtrans(l:s), 'name')
+endfunc
+echo "fin"
+
+https://stackoverflow.com/questions/9464844/how-to-get-group-name-of-highlighting-under-cursor-in-vim
+h synstack
+:color
+vim-colors/colors/vanilla.vim
+nn f :<C-u>call SynGroup()<CR>
+nn h :<C-u>echo synstack(line('.'),col('.'))<CR>
+nun f

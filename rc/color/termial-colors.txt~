@@ -1,0 +1,16 @@
+https://askubuntu.com/questions/558280/changing-colour-of-text-and-background-of-terminal
+printf '\e[38;5;196m Foreground color: red\n'
+printf '\e[38;5;250m Foreground color: red\n'
+printf '\e[48;5;0m Background color: black\n'
+printf '\e[48;5;196m Background color: black\n'
+
+printf '\e[38;2;250;250;250m Foreground color: red\n'
+printf '\e[38;2;25;25;25m Foreground color: red\n'
+printf '\e[38;2;25;25;25m Foreground color: red\n'
+printf '\e[38;2;155;0;0m Foreground color: red\n'
+
+https://tintin.sourceforge.io/info/256color/
+
+color picker tool (use the color picker tool to click on any color in the
+screenshot)
+https://askubuntu.com/questions/941734/whats-the-rgb-values-for-ubuntus-default-terminal-unity

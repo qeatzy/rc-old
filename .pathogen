@@ -1,0 +1,363 @@
+"put below line on top of your ~/.vimrc
+"execute pathogen#infect()
+"call pathogen#helptags() "If you like to get crazy :)
+" If you don't like to get crazy, only call :Helptags when you need to.
+" Plugins are then added to ~/vim/bundle.
+
+
+"unicode.vim, https://github.com/chrisbra/unicode.vim.git
+cd ~/.vim/bundle && git clone https://github.com/chrisbra/unicode.vim.git
+
+"pathogen, https://github.com/tpope/vim-pathogen
+
+mkdir -p ~/.vim/{.vimundo,.vimswap,autoload,bundle,tmp} && wget -O ~/.vim/autoload/pathogen.vim https://github.com/tpope/vim-pathogen/raw/master/autoload/pathogen.vim
+mcd ~/tmp && git clone https://github.com/tpope/vim-pathogen && cp vim-pathogen/autoload/pathogen.vim ~/.vim/autoload
+cd ~/.vim/bundle && git clone https://github.com/justinmk/vim-dirvish # replace netrw perfectly
+cd ~/.vim/bundle && git clone https://github.com/justinmk/vim-sneak
+cd ~/.vim/bundle && git clone https://github.com/tpope/vim-unimpaired
+cd ~/.vim/bundle && git clone https://github.com/tpope/vim-repeat
+cd ~/.vim/bundle && git clone https://github.com/tpope/vim-surround
+cd ~/.vim/bundle && git clone https://github.com/tpope/vim-eunuch       # Vim sugar for the UNIX shell commands that need it the most.
+cd ~/.vim/bundle && git clone https://github.com/tpope/vim-fugitive     # "git, "CVS, "VCS
+cd ~/.vim/bundle && git clone https://github.com/tpope/vim-endwise
+cd ~/.vim/bundle && git clone https://github.com/tpope/vim-vinegar      # vinegar.vim: combine with netrw to create a delicious salad dressing 
+cd ~/.vim/bundle && git clone https://github.com/tpope/vim-sensible
+cd ~/.vim/bundle && git clone https://github.com/vim-utils/vim-man
+https://github.com/aitjcize/cppman
+cd ~/.vim/bundle && git clone https://github.com/jez/vim-superman
+http://www.vim.org/scripts/script.php?script_id=4582  https://github.com/vim-scripts/Conque-GDB
+http://blog.csdn.net/demorngel/article/details/73008059
+
+"clipboard
+cd ~/.vim/bundle && git clone https://github.com/kana/vim-fakeclip
+https://stackoverflow.com/questions/26906289/getting-fakeclip-plugin-to-work-with-vim-and-tmux
+https://news.ycombinator.com/item?id=5029416
+
+"terminal
+cd ~/.vim/bundle && git clone https://github.com/sillybun/vim-repl
+    vim terminal use  https://www.zhihu.com/question/68164923/answer/399729292
+https://stackoverflow.com/questions/50535294/how-can-i-map-keys-to-gdb-commands-using-the-new-vim-8-1-termpack-plugin
+https://stackoverflow.com/questions/49318522/send-buffer-to-a-running-terminal-window-in-vim-8/49366558#49366558
+
+"essential, see "" ls
+
+"scripting, see "" ls
+cd ~/.vim/bundle && git clone https://github.com/LucHermitte/lh-vim-lib
+    eg, lh#list#accumulate2
+
+"html, see " markdown " js
+cd ~/.vim/bundle && git clone https://github.com/mattn/emmet-vim.git
+
+vim目录autoload下自带js的 插件 (javascriptcomplete.vim)
+/usr/share/vim/vim80/autoload/javascriptcomplete.vim
+"js, see " html
+cd ~/.vim/bundle && git clone https://github.com/pangloss/vim-javascript
+tern: code analyzer https://github.com/ternjs/tern  http://ternjs.net/
+tern_for_vim https://github.com/ternjs/tern_for_vim
+fix error by modify path at ~/.vim/bundle/tern_for_vim/autoload/tern.vim:15 https://github.com/ternjs/tern_for_vim/issues/91#issuecomment-110366585
+VIM的JavaScript补全 2015-05-05 http://efe.baidu.com/blog/vim-javascript-completion/
+flow: A static type checker for javascript https://www.tuicool.com/articles/vqeUVzu  https://flow.org/
+Babel plugin for static and runtime type checking using Flow and tcomb. https://github.com/gcanti/babel-plugin-tcomb
+
+"css, see " html
+
+"doc
+" broken
+cd ~/.vim/bundle && git clone https://github.com/powerman/vim-plugin-viewdoc
+
+"ctrlp, "buffer management
+fuzzyfinder cmd-t ctrl-p unite fzf https://www.reddit.com/r/vim/comments/45qe2g/unite_vs_ctrlp_in_2016/
+I find that FZF is the fastest, second Selecta, then CommandT, ctrlp and unite last.
+CommandT need +ruby. Part of Command-T is implemented in C as a Ruby extension for speed,
+What's the difference between this and fzf? https://github.com/Shougo/denite.nvim/issues/109
+cd ~/.vim/bundle && git clone https://github.com/Yggdroot/LeaderF
+cd ~/.vim/bundle && git clone https://github.com/DavidEGx/ctrlp-smarttabs
+cd ~/.vim/bundle && git clone https://github.com/ctrlpvim/ctrlp.vim.git
+cd ~/.vim/bundle && git clone https://github.com/mileszs/ack.vim.git
+cd ~/.vim/bundle && git clone https://github.com/mhinz/vim-grepper
+cd ~/.vim/bundle && git clone https://github.com/junegunn/fzf.vim
+cd ~/.vim/bundle && git clone https://github.com/junegunn/fzf
+cd ~/.vim/bundle && git clone https://github.com/me-and/fzf
+not work with mintty https://github.com/junegunn/fzf/wiki/Cygwin
+ctrlp alternative https://github.com/Yggdroot/LeaderF from https://www.v2ex.com/t/297708
+cd ~/.vim/bundle && git clone https://github.com/wincent/Command-T
+" Unite.vim show cases.  http://bling.github.io/blog/2013/06/02/unite-dot-vim-the-plugin-you-didnt-know-you-need/
+"mc
+cd ~/.vim/bundle && git clone https://github.com/HiPhish/info.vim
+cd ~/.vim/bundle && git clone https://github.com/alx741/vinfo
+both not great, vinfo has no link support.
+info.vim a little slow has fail every now and then.
+let g:infoprg='/usr/bin/info'
+wh info
+cd ~/.vim/bundle && git clone https://github.com/Shougo/denite.nvim       # vim8 + python3
+
+"history
+cd ~/.vim/bundle && git clone https://github.com/goldfeld/ctrlr.vim
+https://stackoverflow.com/questions/741913/how-do-you-search-through-vims-command-history
+
+cd ~/.vim/bundle && git clone https://github.com/junegunn/fzf.vim
+fzf cannot be used on cygwin. but fzf.vim might provide some useful info.
+    to used with fzy.
+"async
+cd ~/.vim/bundle && git clone https://github.com/skywind3000/asyncrun.vim
+cd ~/.vim/bundle && git clone https://github.com/joonty/vim-do
+    use python, 2015
+cd ~/.vim/bundle && git clone https://github.com/tpope/vim-dispatch
+    focus on compiler and tester.
+cd ~/.vim/bundle && git clone https://github.com/metakirby5/codi.vim
+    on cygwin not work when last time tested. work on ubuntu.
+cd ~/.vim/bundle && git clone https://github.com/mhinz/vim-grepper
+    -- ack.vim like wrapper, almost useless.
+cd ~/.vim/bundle && git clone https://github.com/neomake/neomake
+
+"markdown
+cd ~/.vim/bundle && git clone https://github.com/gabrielelana/vim-markdown
+cd ~/.vim/bundle && git clone https://github.com/godlygeek/tabular
+cd ~/.vim/bundle && git clone https://github.com/plasticboy/vim-markdown
+
+"vim-easymotion
+cd ~/.vim/bundle && git clone https://github.com/easymotion/vim-easymotion
+rm -rf ~/.vim/bundle/vim-easymotion
+
+"cms(comment), see " syntax
+"tComment, https://github.com/tomtom/tcomment_vim
+cd ~/.vim/bundle && git clone https://github.com/tomtom/tcomment_vim.git
+rm -rf ~/.vim/bundle/tcomment_vim/
+"nerd-commenter, https://github.com/scrooloose/nerdcommenter
+" commentary.vim, https://github.com/tpope/vim-commentary
+cd ~/.vim/bundle && git clone https://github.com/tpope/vim-commentary.git
+rm -rf ~/.vim/bundle/vim-commentary/
+
+UltiSnips and YouCompleteMe interfering?  https://stackoverflow.com/questions/14896327/ultisnips-and-youcompleteme
+"syntax(syntastic), see " comment " snippet
+vim-syntastic   https://github.com/vim-syntastic/syntastic
+YouCompleteMe   https://github.com/Valloric/YouCompleteMe
+Vim YouCompleteMe for Windows https://bitbucket.org/Alexander-Shukaev/vim-youcompleteme-for-windows
+based on clang/LLVM  http://clang.llvm.org/
+NOTE: The regex syntax is NOT Vim's, it's Python's.
+Vim自动补全插件----YouCompleteMe安装与配置  http://www.cnblogs.com/zhongcq/p/3630047.html
+还有一个原因是没有大牛来做这些功能。在漫长的Vim或emacs历史中，它都是掌握在少数精英程序员手里，扩展它都需要一定的专业知识，我辈普通程序员只是在使用它。而代码补全并不是大牛们的必须，我曾经和一个瑞典的PSE做Pair Programming, 只使用emacs和grep等linux命令，他就可以在整个工程里穿梭自如，常用库的调用了然于心，代码结构清晰，几乎没有语法和拼写错误。估计他看到我花里胡哨的vim, 还用代码提示，心里也是一阵鄙视吧。所以尽管大牛们让emacs可以煮咖啡，vim可以发微博，但是vim和emacs的代码提示一如既往的烂了二三十年。   vim中的杀手级插件: YouCompleteMe  http://zuyunfei.com/2013/05/16/killer-plugin-of-vim-youcompleteme/
+
+# "NERDTree, https://github.com/scrooloose/nerdtree
+cd ~/.vim/bundle && git clone https://github.com/scrooloose/nerdtree.git
+
+"text-object
+" kana/vim-textobj-entire, https://github.com/kana/vim-textobj-entire
+cd ~/.vim/bundle && git clone https://github.com/kana/vim-textobj-entire.git
+rm -rf ~/.vim/bundle/vim-textobj-entire/
+
+"vim-easyclip, https://github.com/svermeulen/vim-easyclip
+
+"operator
+"vim-operator-user, https://github.com/kana/vim-operator-user
+cd ~/.vim/bundle && git clone https://github.com/kana/vim-operator-user.git
+
+"open-browser.vim, https://github.com/tyru/open-browser.vim
+"https://github.com/tyru/open-browser.vim.git
+
+# "vim-quickrun, https://github.com/thinca/vim-quickrun
+
+# "bash-support.vim, https://github.com/vim-scripts/bash-support.vim
+cd ~/.vim/bundle && git clone https://github.com/vim-scripts/bash-support.vim
+
+# "vim-ps1, "ps1, "powershell, https://github.com/PProvost/vim-ps1
+cd ~/.vim/bundle && git clone https://github.com/PProvost/vim-ps1.git
+
+# "pymode, 
+cd ~/.vim/bundle && git clone https://github.com/klen/python-mode.git
+rm -rf ~/.vim/bundle/python-mode
+rm ~/.vim/after/ftplugin/python.vim
+rm ~/.vim/after/indent/python.vim
+
+# "pydoc, (ftplugin) https://github.com/fs111/pydoc.vim
+"git clone https://github.com/fs111/pydoc.vim/tree/master/ftplugin   ~/.vim/ftplugin/python/pymode.vim
+
+# "tpope, "Tim Pope, 
+# "vim-vinegar, https://github.com/tpope/vim-vinegar
+cd ~/.vim/bundle && git clone https://github.com/tpope/vim-vinegar.git
+# "scriptease.vim, https://github.com/tpope/vim-scriptease
+cd ~/.vim/bundle && git clone https://github.com/tpope/vim-scriptease.git
+# "projectionist.vim, https://github.com/tpope/vim-projectionist
+cd ~/.vim/bundle && git clone https://github.com/tpope/vim-projectionist.git
+
+cd ~/.vim/bundle && git clone
+"ls, see " essential " scripting
+    " mc " completion " snippet
+    " code " lang " library
+
+cd ~/.vim/bundle && git clone https://github.com/Shougo/deoplete.nvim
+"completion, see "" ls " snippet
+    " js
+YouCompleteMe   https://github.com/Valloric/YouCompleteMe#why-isnt-ycm-just-written-in-plain-vimscript-ffs
+deoplete        https://github.com/Shougo/deoplete.nvim
+neocomplete     https://github.com/Shougo/neocomplete.vim
+As far as I know deoplete doesnt support vim yet.  https://www.reddit.com/r/vim/comments/5w6wac/vim_users_of_reddit_whats_your_favorite/de7qrt7/
+(NCM) 比 deoplete 更快！比 YCM 更轻！支持 neovim/vim8 的自动补全框架！ https://www.v2ex.com/t/344868
+nvim-completion-manager https://github.com/roxma/nvim-completion-manager
+VimCompletesMe
+MUcomplete
+Omnicomplete
+https://www.reddit.com/r/vim/comments/6zgi34/what_are_the_differences_between_vimcompletesme/
+completor       https://github.com/maralla/completor.vim
+asyncomplete    https://github.com/prabirshrestha/asyncomplete.vim
+
+"TypeScript, see "" lang
+cd ~/.vim/bundle && git clone https://github.com/leafgarland/typescript-vim
+# https://www.reddit.com/r/vim/comments/4iggaj/vim_and_typescript/
+
+"lang, see "" ls " code
+    " TypeScript
+流行的语言一般都有对应的 vim 插件。例如 python 可以用 jedi-vim，golang 有 vim-go
+
+"code, see "" ls " lang
+Asynchronous Lint Engine Build Status  https://github.com/w0rp/ale
+
+code snippet/template
+# "snippet, "template, see " syntax
+# "vim-snipmate,
+cd ~/.vim/bundle && git clone https://github.com/SirVer/ultisnips.git
+cd ~/.vim/bundle && git clone https://github.com/garbas/vim-snipmate.git
+cd ~/.vim/bundle && git clone https://github.com/honza/vim-snippets.git && git clone https://github.com/MarcWeber/vim-addon-mw-utils.git
+
+"latex
+compare alternatives https://github.com/lervag/vimtex#alternatives
+cd ~/.vim/bundle && git clone https://github.com/vim-latex/vim-latex
+cd ~/.vim/bundle && git clone https://github.com/lervag/vimtex
+
+"library, see "" ls
+cd ~/.vim/bundle && git clone https://github.com/LucHermitte/lh-vim-lib
+
+# " vim -u NONE -c "helptags vim-someplugin/doc" -c q
+
+# "Article series "Vim Plugins You Should Know About"
+# "http://www.catonmat.net/series/vim-plugins-you-should-know-about
+# "list, list of popular vim plugins
+# http://vimawesome.com/
+
+"capture
+https://github.com/tyru/capture.vim
+
+"text-object
+cd ~/.vim/bundle && git clone https://github.com/machakann/vim-sandwich
+error & old cd ~/.vim/bundle && git clone https://github.com/vim-scripts/QuickBuf
+"visual, see "" edit
+https://github.com/gcmt/wildfire.vim
+" This selects the next closest text object.
+map <SPACE> <Plug>(wildfire-fuel)
+cd ~/.vim/bundle && git clone https://github.com/wellle/targets.vim
+da, To delete the item in a comma separated list under the cursor, use da,
+
+"edit, see " qf " visual " ml(multi-line)
+cd ~/.vim/bundle && git clone https://github.com/AndrewRadev/splitjoin.vim
+span to multi-line when edit, else collapse to one-line
+cd ~/.vim/bundle && git clone https://github.com/AndrewRadev/sideways.vim
+SidewaysLeft     move func args left/right
+
+"ml(multi-line), see " motion " edit
+cd ~/.vim/bundle && git clone https://github.com/haya14busa/is.vim
+https://github.com/haya14busa/incsearch.vim
+is.vim is successor of incsearch.vim. https://medium.com/@haya14busa/incsearch-vim-is-dead-long-live-incsearch-2b7070d55250
+
+"motion, see " mf " ml(multi-line)
+cd ~/.vim/bundle && git clone https://github.com/justinmk/vim-sneak
+    -- inside sreen fast motion. s to move, dz/cz to delete/change.
+    -- two char search like f/t, but can across lines. Do use sneak-label-mode
+    let g:sneak#label = 1
+cd ~/.vim/bundle && git clone https://github.com/unblevable/quick-scope
+    -- enhancement of f/t, highlight first/second char in current line
+    let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
+    let g:qs_enable=0
+    let b:qs_local_disable=1
+    let g:qs_max_chars=130
+https://www.reddit.com/r/vim/comments/6gba9v/what_do_guys_think_of_vimsneak_plugin/
+cd ~/.vim/bundle && git clone https://github.com/haya14busa/vim-signjk-motion
+    -- not good enough, letter too small, color bad, should combine j/k since inside screen.
+cd ~/.vim/bundle && git clone https://github.com/anschnapp/move-less
+    -- fold below instead of move, not work with my .vimrc. error 
+
+"search, see " mf
+ag vs ripgrep
+ripgrep is written in Rust. https://github.com/BurntSushi/ripgrep#building
+ripgrep cygwin
+author Certainly, I've used ripgrep extensively inside of cygwin, https://github.com/BurntSushi/ripgrep/issues/269
+Rust simply does not support msys/cygwin and likely never will.
+ripgrep binary https://github.com/BurntSushi/ripgrep/releases
+"filter
+fzy vs fzf 
+as of Dec 2018 fzf use go, thus cannot used on cygwin.  https://github.com/junegunn/fzf/blob/master/BUILD.md
+https://github.com/junegunn/fzf/issues/638
+error: character set not supported
+ `TERM= fzf` install of fzf
+
+"mf(multi-file), see "" motion " search
+    " qf for quickfix-reflector
+cd ~/.vim/bundle && git clone https://github.com/shawnaxsom/vim-quickly
+fzy look promising, tested, quite good. https://github.com/jhawthorn/fzy
+    find -type f |fzy
+    find -type f >~/.xx
+    fzy <~/.xx
+    TERM= fzf <~/.xx
+    wh fzf
+vim-picker https://vimawesome.com/plugin/vim-picker-may-fear-less
+echo g:picker_selector_executable
+cd ~/.vim/bundle && git clone https://github.com/srstevenson/vim-picker
+
+"qf(quickfix), see " mf(multi-file) " edit
+cd ~/.vim/bundle && git clone https://github.com/stefandtw/quickfix-reflector.vim
+    edit quickfix buffer, then reflect back to file.
+https://github.com/Olical/vim-enmasse
+    Takes a quickfix list and makes it editable.
+-romainl's plugins for quickfix list https://www.reddit.com/r/vim/comments/626no2/vim_without_nerd_tree_or_ctrlp/dfku9pj
+    vim-cool — makes hlsearch almost bearable,
+    vim-qf — lots of useful quickfix-related commands,
+    vim-qlist — :ilist and friends in the quickfix (I love the quickfix),
+    vim-tinyMRU — quick and convenient access to recent files.
+https://github.com/romainl/vim-qf
+
+set background=dark | colorscheme solarized
+set background=light | colorscheme solarized
+colorscheme monokai
+good list https://www.reddit.com/r/vim/comments/6rf9z6/what_is_your_favorite_colorscheme/
+list with figure 200+ http://vimcolors.com/?utf8=✓&bg=light&order=newest
+light https://www.reddit.com/r/vim/comments/4zitgc/whats_everyones_favorite_light_colorschemes/
+https://github.com/flazz/vim-colorschemes
+https://github.com/rafi/awesome-vim-colorschemes
+# "color,
+" cd ~/.vim/bundle && git clone https://github.com/zefei/vim-colortuner # won't work under terminal
+cd ~/.vim/bundle && git clone https://github.com/chrisbra/Colorizer
+# for color-blinded
+cd ~/.vim/colors/ && git clone https://github.com/romainl/Apprentice    # nice dark colorscheme
+cd ~/.vim/colors/ && git clone https://github.com/w0ng/vim-hybrid       # nice light colorscheme
+cd ~/.vim/colors/ && git clone https://github.com/NLKNguyen/papercolor-theme
+cd ~/.vim/colors/ && git clone https://github.com/endel/vim-github-colorscheme
+cd ~/.vim/colors/ && git clone https://github.com/ayu-theme/ayu-vim
+cd ~/.vim/colors/ && git clone https://github.com/rakr/vim-two-firewatch
+cd ~/.vim/colors/ && git clone https://github.com/xero/sourcerer.vim
+cd ~/.vim/colors/ && git clone https://github.com/raphamorim/lucario    # larger
+cd ~/.vim/colors/ && git clone https://github.com/tpope/vim-vividchalk
+cd ~/.vim/colors/ && git clone https://github.com/zeis/vim-kolor
+cd ~/.vim/colors/ && git clone https://github.com/kabbamine/yowish.vim  # larger
+cd ~/.vim/colors/ && git clone https://github.com/dracula/vim
+cd ~/.vim/colors/ && git clone https://github.com/morhetz/gruvbox
+" cd ~/.vim/colors/ && git clone https://github.com/arcticicestudio/nord
+cd ~/.vim/colors/ && git clone https://github.com/zanglg/nova.vim
+cd ~/.vim/colors/ && git clone https://github.com/reedes/vim-colors-pencil
+cd ~/.vim/colors/ && git clone https://github.com/nelstrom/vim-mac-classic-theme
+cd ~/.vim/colors/ && git clone https://github.com/tomasr/molokai
+cd ~/.vim/colors/ && curl -LSO https://raw.githubusercontent.com/romainl/vim-dichromatic/wip/colors/dichromatic.vim
+cd ~/.vim/colors/ && curl -LSO https://raw.githubusercontent.com/sjl/badwolf/master/colors/badwolf.vim
+cd ~/.vim/colors/ && curl -LSO https://raw.githubusercontent.com/sjl/badwolf/master/colors/goodwolf.vim
+cd ~/.vim/bundle && git clone https://github.com/altercation/vim-colors-solarized
+cd ~/.vim/bundle && git clone https://github.com/sickill/vim-monokai
+    rm -rf cd ~/.vim/bundle/vim-monokai
+cd ~/.vim/bundle && git clone https://github.com/crusoexia/vim-monokai
+    rm -rf cd ~/.vim/bundle/vim-monokai
+cd ~/.vim/bundle && git clone https://github.com/skielbasa/vim-material-monokai
+ set background=dark | set termguicolors | colorscheme material-monokai
+cd ~/.vim/bundle && git clone https://github.com/ErichDonGubler/vim-sublime-monokai
+ colorscheme sublimemonokai
+
+# rm -rf ~/.vim/bundle/
+# cd ~/.vim/bundle && git clone 
+# cd ~/.vim/bundle; 
+# " %s=^cd \~/.vim/bundle; git=cd \~/.vim/bundle \&\& git=

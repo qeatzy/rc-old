@@ -1,0 +1,3 @@
+printf '\e[38;2;147;246;161m yellow color \e[0m'  # works inside tmux too
+147,246,161
+

@@ -1,0 +1,2 @@
+tmux a || tmux new\; movew -s 0 -t 1\; neww -c ~/notes
+# tmux a || tmux new\; neww -c ~/notes -t 0\; last-window

@@ -1,0 +1,4 @@
+True Colour (16 million colours) support in various terminal applications and terminals · GitHub
+    https://gist.github.com/XVilka/8346728
+24-bit direct color support (true color) · Issue #799 · cmus/cmus · GitHub
+     copy of above   https://github.com/cmus/cmus/issues/799

@@ -1,0 +1,29 @@
+https://www.lifewire.com/contrasting-foreground-background-colors-4061363
+
+https://ux.stackexchange.com/questions/107318/formula-for-color-contrast-between-text-and-background
+
+Luminance
+0.299,0.587,0.114
+0.299*x[0]+0.587*x[1]+0.114*x[2]
+r*0.299 + g*0.587 + b*0.114
+https://stackoverflow.com/questions/1754211/evaluate-whether-a-hex-value-is-dark-or-light
+https://stackoverflow.com/questions/24260853/check-if-color-is-dark-or-light-in-android
+
+https://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef
+ L = 0.2126 * R + 0.7152 * G + 0.0722 * B
+ if RsRGB <= 0.03928 then R = RsRGB/12.92 else R = ((RsRGB+0.055)/1.055) ^ 2.4
+ RsRGB = R8bit/255
+def rl(color):  # np.array of size (3) or (n,3)
+    c = np.asarray(color) / 255
+    t = c < 0.03928
+    return t*c/12.92 + ~t*np.exp(((c+0.055)/1.055),2.4)
+
+ A 16-bit RGB or LAB image in Photoshop would have 48-bits per pixel, etc.
+ (actually, adobe only use 15 bits)
+ Most cameras will let you save files in 8-bits (JPG) or 12 to 16-bits (RAW).
+ they typically refer to displays with 8-bits/channel as '24-bit'
+ A better option would be '30-48 bits' (aka 'Deep Color'), which is 10-16 bits/channel -with anything over 10 bits/channel being overkill for display in my opinion.
+https://petapixel.com/2018/09/19/8-12-14-vs-16-bit-depth-what-do-you-really-need/
+
+ Color is a perception, created within the visual system, and the human visual system simply can distinguish that many unique colors. At most, we can see a few million different colors. So what would it mean to say that a display can make 16 million 'colors,' let alone 4 billion?
+https://www.quora.com/How-many-colors-is-24-bit-color-and-32-bit-color

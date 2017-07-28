@@ -1,0 +1,4 @@
+https://vi.stackexchange.com/questions/8772/how-can-i-fix-missing-syntax-highlighting-for-python-keywords-such-as-self
+:syn keyword pythonBuiltin self
+:syn keyword pythonSelf self
+:highlight def link pythonSelf Special

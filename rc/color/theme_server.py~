@@ -1,0 +1,564 @@
+import requests
+from lxml import etree
+import os; osp=os.path
+import re
+import pdb; st=pdb.set_trace
+
+def cache_to(dir):
+# https://raw.githubusercontent.com/Mayccoll/Gogh/master/themes/3024-night.sh
+# https://github.com/Mayccoll/Gogh/tree/master/themes
+    _table = {ord(':'):'+',ord('/'):'_'}
+    def _intermediate(func):
+        def inner(url, *args, **kwargs):
+            m = re.match('https://raw.githubusercontent.com/Mayccoll/Gogh/master/themes/(.*)', url)
+            name = 'themes/' + m.group(1) if m else url.translate(_table)
+            try:
+                with open(osp.join(dir, name), 'r') as f:
+                    ret = f.read()
+            except FileNotFoundError:
+                ret = func(url, *args, **kwargs)
+                with open(osp.join(dir, name), 'w') as f:
+                    f.write(ret)
+            return ret
+        return inner
+    return _intermediate
+@cache_to(osp.join(os.environ['HOME'], '.colors/Gogh'))
+def _fetch_url(url):
+    r = requests.get(url)
+    return r.text
+
+url = 'https://github.com/Mayccoll/Gogh/tree/master/themes'
+dom = etree.HTML(_fetch_url(url))
+th = dom.xpath('//td[@class="content"]/span/a')
+# names, href = zip([(e.get('title'),e.get('href')) for e in th if
+names, href = zip(*[(e.get('title'),e.get('href')) for e in th if
+        e.get('title').endswith('sh')])
+# idx = [i for i in range(len(names)) if names[i].endswith('.sh')]
+# href = [th[i].get('href') for i in idx]
+# st()
+# print(set([(i.rpartition('.')[-1]) for i in names]))
+prefix = href[0].rpartition('/')[0]
+x = list(prefix + '/' + n == h for n,h in zip(names,href))
+print(all(prefix + '/' + n == h for n,h in zip(names,href)))
+def fetch_theme(name):
+    url = 'https://raw.githubusercontent.com/Mayccoll/Gogh/master/themes/{}'.format(name)
+    return _fetch_url(url)
+def findall(text):
+    x = re.findall('^export\s*(\S*)="([^"]+)"',text,flags=re.MULTILINE)
+    return x
+# https://raw.githubusercontent.com/Mayccoll/Gogh/master/apply-colors.sh
+_mapper = {'FOREGROUND_COLOR':-3, 'BACKGROUND_COLOR':-2, 'CURSOR_COLOR':-1}
+_unsupported = ('HIGHLIGHT_FG_COLOR', 'HIGHLIGHT_BG_COLOR', 'USE_SYS_TRANSPARENCY')
+def parse_color(color):
+    m = re.match('#?#?([0-9a-fA-F]{6})$', color)
+    if m:
+        return tuple(int(m.group(1)[i:i+2],base=16) for i in (0,2,4))
+def parse_spec(specs):
+    """ specs: iterable of name,value pair """
+    # theme_name = None
+    ret = []
+    _d = {}
+    for name, value in specs:
+        if name == 'PROFILE_NAME':
+            theme_name = value.replace(' ','-')
+            continue
+        if name in _unsupported:
+            continue
+        m = re.match('COLOR_(\d+)', name)
+        if m:
+            code = int(m.group(1))
+        else:
+            # try:
+            code = _mapper[name]
+        if value.startswith('$'):
+            val = _d[value[1:]]
+        else:
+            val = parse_color(value)
+        _d[name] = val
+        ret.append((code, val))
+    return theme_name, ret
+def get_theme(name):
+    return parse_spec(findall(fetch_theme(name)))
+_themes = {}
+for name in names:
+    theme_name, theme = get_theme(name)
+    # assert(theme_name.lower() == name.rpartition('.')[0])
+    name = name.rpartition('.')[0]  # remove .sh
+    if (theme_name.lower() != name):
+        print(theme_name.lower(), name)
+    _themes[name] = theme
+    # print(name, theme_name, len(theme), len(set(i[1] for i in theme)))
+    # if len(theme) != len(set(theme)):
+    #     print(name, theme_name, len(theme), len(set(theme)))
+    # if name.startswith('nord'):
+    #     break
+# # x = findall(_17.text)
+# y = parse_spec(x)
+
+import socket
+
+so = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+so.bind(('127.0.0.1',7890))
+so.listen(5)
+
+#!/usr/bin/python3
+import pdb; st=pdb.set_trace
+import os, sys, re
+__debug = False
+def dev_null(*args, **kwargs):
+    pass
+log = print if __debug else dev_null
+notify = print if os.isatty(0) else dev_null
+warning = print
+
+def fc0(name):
+    m = re.search('^(4;)?(\d+)$', name)
+    if not m:
+        raise ValueError('"{}" provided, not recognized'.format(name))
+    return int(m.group(2)) + (0 if m.group(1) else -13)
+def fv0(value):
+    m = re.search('^#?([0-9a-fA-F]{6})$', value)
+    if not m:
+        raise ValueError('"{}" provided, not recognized'.format(value))
+    m = m.group(1)
+    return tuple(int(m[i:i+2],base=16) for i in (0,2,4))
+
+# _themes = {}
+def add_theme(func):
+    def inner(t, *args, **kwargs):
+        theme = func(t, *args, **kwargs)
+        name = re.search('\[([^\]]+)\]',t[:200]).group(1)
+        if name in _themes:
+            warning("{} already added. added & overridded.".format(name))
+        _themes[name] = theme
+        log(name,end=': '); log(theme)
+        return name, theme
+    return inner
+
+def load_theme(): pass
+def match_theme(name):
+    if len(_themes) < 3:
+        load_theme()
+    def match(th, theme):
+        tps = th.split('-')
+        tpd = theme.split('-')
+        if len(tps) > len(tpd):
+            return False
+        m = [dest.startswith(s) for s,dest in zip(tps,tpd)]
+        # import pdb; pdb.set_trace()
+        # print(th)
+        # if 'dark' in theme:
+        # st()
+        return all(m)
+    # x = {theme: match(name,theme) for theme in _themes}
+    # st()
+    return [name] if name in _themes else [theme for theme in _themes if match(name, theme)]
+
+# def p0(line): m=re.search('(?<=])([0-9;]+);#([a-fA-F0-9]{6})',line); return m.group(1),m.group(2)
+# t0 = """
+# [initial]
+# # https://medium.com/@kazakov.a.s.90/hey-dude-pimp-my-cygwin-35a3ef4cb748
+# echo -ne   '\eP\e]10;#839496\a'  # Foreground   -> base0
+# echo -ne   '\eP\e]11;#002B36\a'  # Background   -> base03
+# echo -ne   '\eP\e]12;#DC322F\a'  # Cursor       -> red
+# echo -ne  '\eP\e]4;0;#073642\a'  # black        -> Base02
+# echo -ne  '\eP\e]4;8;#002B36\a'  # bold black   -> Base03
+# echo -ne  '\eP\e]4;1;#DC322F\a'  # red          -> red
+# echo -ne  '\eP\e]4;9;#CB4B16\a'  # bold red     -> orange
+# echo -ne  '\eP\e]4;2;#859900\a'  # green        -> green
+# echo -ne '\eP\e]4;10;#586E75\a'  # bold green   -> base01 *
+# echo -ne  '\eP\e]4;3;#B58900\a'  # yellow       -> yellow
+# echo -ne '\eP\e]4;11;#657B83\a'  # bold yellow  -> base00 *
+# echo -ne  '\eP\e]4;4;#268BD2\a'  # blue         -> blue
+# echo -ne '\eP\e]4;12;#839496\a'  # bold blue    -> base0 *
+# echo -ne  '\eP\e]4;5;#D33682\a'  # magenta      -> magenta
+# echo -ne '\eP\e]4;13;#6C71C4\a'  # bold magenta -> violet
+# echo -ne  '\eP\e]4;6;#2AA198\a'  # cyan         -> cyan
+# echo -ne '\eP\e]4;14;#93A1A1\a'  # bold cyan    -> base1 *
+# echo -ne  '\eP\e]4;7;#EEE8D5\a'  # white        -> Base2
+# echo -ne '\eP\e]4;15;#FDF6E3\a'  # bold white   -> Base3
+# """
+# def e0(x): return x.startswith('echo')
+# @add_theme
+# def f0(t):
+#     cv = [p0(l) for l in t.splitlines() if e0(l)]
+#     return [(fc0(c),fv0(v)) for c,v in cv]
+# f0(t0)
+
+# __codes = dict(
+#     foregroundcolour=-3,
+#     backgroundcolour=-2,
+#     cursorcolour=-1,
+#     black=0,
+#     red=1,
+#     green=2,
+#     yellow=3,
+#     blue=4,
+#     magenta=5,
+#     cyan=6,
+#     white=7,
+#     boldblack=8,
+#     boldred=9,
+#     boldgreen=10,
+#     boldyellow=11,
+#     boldblue=12,
+#     boldmagenta=13,
+#     boldcyan=14,
+#     boldwhite=15,
+# )
+
+# def p1(line):
+#     m = re.search('(\w+)=(\d+),(\d+),(\d+)', line)
+#     if m:
+#         return __codes[m.group(1).lower()], [int(m.group(i)) for i in (2,3,4)]
+# @add_theme
+# def pt1(t):
+#     cv = [p1(l) for l in t.splitlines()]
+#     return [i for i in cv if i]
+#
+# BUILTIN_THEMES = '''
+# [onedark]
+# ForegroundColour=171,178,191
+# BackgroundColour=30,33,39
+# CursorColour=97,175,239
+# BoldBlack=92,99,112
+# Black=92,99,112
+# BoldRed=224,108,117
+# Red=224,108,117
+# BoldGreen=152,195,121
+# Green=152,195,121
+# BoldYellow=209,154,102
+# Yellow=209,154,102
+# BoldBlue=97,175,239
+# Blue=97,175,239
+# BoldMagenta=198,120,221
+# Magenta=198,120,221
+# BoldCyan=86,182,194
+# Cyan=86,182,194
+# BoldWhite=171,178,191
+# White=171,178,191
+#
+# [material-dark]
+# BackgroundColour=35,35,34
+# ForegroundColour=229,229,229
+# CursorColour=229,229,229
+# Black=33,33,33
+# BoldBlack=66,66,66
+# Red=183,20,31
+# BoldRed=232,59,63
+# Green=69,123,36
+# BoldGreen=122,186,58
+# Yellow=246,152,30
+# BoldYellow=255,234,46
+# Blue=19,78,178
+# BoldBlue=84,164,243
+# Magenta=86,0,136
+# BoldMagenta=170,77,188
+# Cyan=14,113,124
+# BoldCyan=38,187,209
+# White=239,239,239
+# BoldWhite=217,217,217
+#
+# [material-light]
+# BackgroundColour=234,234,234
+# ForegroundColour=46,46,45
+# CursorColour=46,46,45
+# Black=33,33,33
+# BoldBlack=66,66,66
+# Red=183,20,31
+# BoldRed=232,59,63
+# Green=69,123,36
+# BoldGreen=122,186,58
+# Yellow=252,123,8
+# BoldYellow=253,142,9
+# Blue=19,78,178
+# BoldBlue=84,164,243
+# Magenta=86,0,136
+# BoldMagenta=170,77,188
+# Cyan=14,113,124
+# BoldCyan=38,187,209
+# White=239,239,239
+# BoldWhite=217,217,217
+#
+# [solarized-light]
+# BackgroundColour=253,246,227
+# ForegroundColour=88,110,117
+# CursorColour=88,110,117
+# Black=0,43,54
+# BoldBlack=101,123,131
+# Red=220,50,47
+# BoldRed=220,50,47
+# Green=133,153,0
+# BoldGreen=133,153,0
+# Yellow=181,137,0
+# BoldYellow=181,137,0
+# Blue=38,139,210
+# BoldBlue=38,139,210
+# Magenta=108,113,196
+# BoldMagenta=108,113,196
+# Cyan=42,161,152
+# BoldCyan=42,161,152
+# White=147,161,161
+# BoldWhite=253,246,227
+#
+# [solarized-dark]
+# BackgroundColour=0,43,54
+# ForegroundColour=147,161,161
+# CursorColour=147,161,161
+# Black=0,43,54
+# BoldBlack=101,123,131
+# Red=220,50,47
+# BoldRed=220,50,47
+# Green=133,153,0
+# BoldGreen=133,153,0
+# Yellow=181,137,0
+# BoldYellow=181,137,0
+# Blue=38,139,210
+# BoldBlue=38,139,210
+# Magenta=108,113,196
+# BoldMagenta=108,113,196
+# Cyan=42,161,152
+# BoldCyan=42,161,152
+# White=147,161,161
+# BoldWhite=253,246,227
+#
+# [tomorrow-dark]
+# BackgroundColour=29,31,33
+# ForegroundColour=197,200,198
+# CursorColour=197,200,198
+# Black=29,31,33
+# BoldBlack=150,152,150
+# Red=204,102,102
+# BoldRed=204,102,102
+# Green=181,189,104
+# BoldGreen=181,189,104
+# Yellow=240,198,116
+# BoldYellow=240,198,116
+# Blue=129,162,190
+# BoldBlue=129,162,190
+# Magenta=178,148,187
+# BoldMagenta=178,148,187
+# Cyan=138,190,183
+# BoldCyan=138,190,183
+# White=197,200,198
+# BoldWhite=255,255,255
+#
+#
+# [tomorrow-light]
+# BackgroundColour=255,255,255
+# ForegroundColour=55,59,65
+# CursorColour=55,59,65
+# Black=29,31,33
+# BoldBlack=150,152,150
+# Red=204,102,102
+# BoldRed=204,102,102
+# Green=181,189,104
+# BoldGreen=181,189,104
+# Yellow=240,198,116
+# BoldYellow=240,198,116
+# Blue=129,162,190
+# BoldBlue=129,162,190
+# Magenta=178,148,187
+# BoldMagenta=178,148,187
+# Cyan=138,190,183
+# BoldCyan=138,190,183
+# White=197,200,198
+# BoldWhite=255,255,255
+# '''
+# [pt1(t) for t in BUILTIN_THEMES.split('\n\n')]
+#
+# def p2(line):
+#     m = re.search('COLOR_(-?\d+)="#([0-9a-fA-F]{6})"',line)
+#     if m:
+#         name, v = int(m.group(1)), m.group(2)
+#         value = [int(v[i:i+2],base=16) for i in (0,2,4)]
+#         return name, value
+# @add_theme
+# def pt(t,p):    # parse theme
+#     cv = [p(l) for l in t.splitlines()]
+#     return [i for i in cv if i]
+# try:
+#     with open(os.path.dirname(os.path.abspath(sys.argv[0])) + '/gallery_Gogh') as f:
+#         for t in re.split('\n\n+',f.read()):
+#             if len(t) >= 400:
+#                 pt(t,p2)
+# except FileNotFoundError:
+#     pass
+
+_TMUX = os.environ.get('TMUX')
+ESC_BEGIN = '\033Ptmux;\033\033]' if _TMUX else '\033]'
+ESC_END = '\a\033\\' if _TMUX else '\a'
+COLOR_SPEC = '{},{},{}' if sys.platform == 'cygwin' else '#{:02x}{:02x}{:02x}'
+def set_theme(theme):
+    """ theme: a sequence of name, value.  -3 <= name <= 255, value = (r,g,b), 0 <= r,g,b <= 255 """
+    lst = []
+    for name, value in theme:
+        assert(-3 <= name <= 255 and len(value) == 3 and 0 <= value[0] <= 255
+                and 0 <= value[1] <= 255 and 0 <= value[2] <= 255)
+        lst.append(''.join('{}{}{}{}'.format(ESC_BEGIN,
+                '4;{};'.format(name) if name >= 0 else '{};'.format(name+13),
+                COLOR_SPEC.format(*value),
+                ESC_END)))
+    # print(lst)
+    # print(''.join(lst),end='') # control sequence to terminal
+    return ''.join(lst) # control sequence to terminal
+# set_theme(f0(t0))
+# set_theme(f1(t1))
+# # set_theme(f2(t2))
+
+def try_set_theme(name):
+    matched = match_theme(name)
+    # print(matched)
+    if len(matched) == 0:
+        warning('no matched themes. "{}" from {}'.format(name,
+            list(_themes)))
+    elif len(matched) > 1:
+        warning('multi themes matched. "{}" from {}'.format(name, matched))
+    else:
+        # print("set " + matched[0])
+        notify("set " + matched[0])
+        return set_theme(_themes[matched[0]])
+
+handlers = []
+def add_handler(func):
+    handlers.append(func)
+    return func
+
+@add_handler
+def cli_empty(args):
+    if len(args) == 0:
+        return ['set']
+    else:
+        return args
+
+def mfv(value):
+    return fv1(value) if ',' in value else fv0(value)
+
+@add_handler
+def cli_number_override(args):
+    m = re.search('^(-?\d+)(?:[-,](\d+))?$',args[0])
+    if m:
+        start,stop = m.groups()
+        # st()
+        start = int(start)
+        stop = start+1 if not stop else int(stop)
+        assert(-3 <= start < stop <= 256)
+        # CO 1
+        value = (0,0,0) if len(args) == 1 else  mfv(args[1])
+        _reqdict[_reqid] = set_theme((i,value) for i in range(start,stop))
+    else:
+        return args
+
+def parse_numbers(fields):
+    # s = '3,8-3 9-12 100'
+    ret = []
+    x = re.split('\s|,',fields.strip(' ,'))
+    for s in x:
+        m = re.search('^(-?\d+)[-](\d+)$',s)
+        if m:
+            a,b = (int(g) for g in m.groups())
+            ret.extend(range(a, b if b > a else b+a))
+        else:
+            try:
+                ret.append(int(s))
+            except ValueError:
+                warning('color "{}"not a int number'.format(s))
+    return ret
+
+@add_handler
+def cli_override(args):
+    if (args[0] == 'o' and len(args) > 1) or re.match('o-?\d', args[0]):
+        # print(args)
+        try:
+            value = mfv(args[-1])
+            args = args[:-1]
+            # st()
+        except (IndexError,ValueError):
+            value = (0,0,0)
+        nr = parse_numbers(' '.join([args[0][1:]] + args[1:]))
+        # st()
+        _reqdict[_reqid] = set_theme((i,value) for i in nr)
+    else:
+        return args
+
+@add_handler
+def cli_set(args):
+    if 'set'.startswith(args[0]):
+        theme = args[1] if len(args) > 1 else 'solarized-dark'
+        _reqdict[_reqid] = try_set_theme(theme)
+    else:
+        return args
+
+@add_handler
+def cli_list(args):
+    if 'list'.startswith(args[0]):
+        _reqdict[_reqid] = "list all supported themes." + '\n' + ("\n".join(_themes))
+    else:
+        return args
+
+@add_handler
+def cli_show(args):
+    def show_color(nr,ncol=8):
+        for start in range(0,len(nr),ncol):
+            return (''.join('\033[38;5;{}m {:3d}'.format(i,i) for i in
+                nr[start:start+ncol]))
+    if args[0].startswith('c'):
+        try:
+            m = re.search('^c(\d+)$',args[1:][-1])
+            if m:
+                ncol = int(m.group(1))
+                args = args[:-1]
+        except (IndexError,ValueError):
+            ncol = 8
+        nr = parse_numbers(' '.join([args[0][1:]] + args[1:]))
+        _reqdict[_reqid] = show_color(nr,ncol)
+    else:
+        return args
+
+@add_handler
+def cli_show_rgb(args):
+    if args[0] == 'r' and len(args) > 1:
+        # print(args[1:])
+        v = [mfv(i) for i in args[1:]]
+        _reqdict[_reqid] = (' '.join('\033[38;2;{};{};{}mcolor\033[0m'.format(*i)
+            for i in v))
+    else:
+        return args
+
+@add_handler
+def cli_default(args):
+    # if args[0][:1] == "-":
+    #     print("print doc string")
+    # else:
+    _reqdict[_reqid] = try_set_theme(args[0])
+
+def cli(args):
+    # args = sys.argv[1:]
+    for h in handlers:
+        log(h.__name__)
+        args = h(args)
+        if args is None:
+            break
+
+
+_reqid = 0
+_reqdict = {}
+def handle():
+    s, addr = so.accept()
+    request = s.recv(4096)
+    request = request.decode('utf8')
+    args = request.split(';')
+    global _reqid
+    _reqid += 1
+    cli(args)
+    if _reqdict.get(_reqid) is not None:
+        reply = _reqdict[_reqid]
+    else:
+        reply = "Error, argument not recognized"
+
+    s.send(reply.encode('utf8'))
+    print(type(s), type(so))
+    # s.send(reply.decode('utf8'))
+
+while True:
+    handle()

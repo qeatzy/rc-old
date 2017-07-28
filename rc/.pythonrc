@@ -1,0 +1,43 @@
+# export PYTHONSTARTUP=~/notes/rc/.pythonrc
+# https://stackoverflow.com/questions/4837237/pythonrc-py-is-not-loading-in-interactive-mode
+import collections
+import types
+
+def mro(x): return (x if type(x) is type else type(x)).__mro__
+
+def mtype(arg,reduce=False):     # type of iterable of object,  mnemonic: map type of possible iterable
+    import collections
+    import types
+    if isinstance(arg, collections.Iterable) and not isinstance(arg, types.StringTypes):
+        ret = [type(x) for x in arg]
+        return set(ret) if reduce else ret
+    else:
+        return type(arg)
+
+def mlen(arg,reduce=False):     # len of iterable of object,  mnemonic: map len of possible iterable
+    import collections
+    import types
+    if isinstance(arg, collections.Iterable) and not isinstance(arg, types.StringTypes):
+        ret = [len(x) for x in arg]
+        return set(ret) if reduce else ret
+    else:
+        return len(arg)
+
+def mshape(arg,reduce=False):     # shape of iterable of object,  mnemonic: map shape of possible iterable
+    import collections
+    import types
+    if isinstance(arg, collections.Iterable) and not isinstance(arg, types.StringTypes):
+        ret = [x.shape for x in arg]
+        return set(ret) if reduce else ret
+    else:
+        return arg.shape
+
+def mdtype(arg,reduce=False):     # dtype of iterable of object,  mnemonic: map dtype of possible iterable
+    import collections
+    import types
+    if isinstance(arg, collections.Iterable) and not isinstance(arg, types.StringTypes):
+        ret = [x.dtype for x in arg]
+        return set(ret) if reduce else ret
+    else:
+        return arg.dtype
+

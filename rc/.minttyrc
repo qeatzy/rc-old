@@ -1,0 +1,169 @@
+ForegroundColour=198,198,198
+BackgroundColour=38,38,38
+
+// ForegroundColour=38,38,38
+// BackgroundColour=198,198,198
+
+
+
+// ForegroundColour=131,148,150
+// BackgroundColour=0,43,54
+// CursorColour=220,50,47
+
+// ForegroundColour=0,43,54
+// BackgroundColour=131,148,150
+// CursorColour=220,50,47
+
+// ForegroundColour=0,43,54
+// BackgroundColour=101,148,150
+// CursorColour=220,50,47
+
+// ForegroundColour=0,43,54
+// BackgroundColour=131,178,120
+// CursorColour=220,50,47
+
+// ForegroundColour=0,43,54
+// BackgroundColour=131,168,100
+// CursorColour=220,50,47
+
+// ForegroundColour=0,43,54
+// BackgroundColour=0,255,255
+// CursorColour=220,50,47
+
+// ForegroundColour=0,43,54
+// BackgroundColour=130,170,100
+// CursorColour=220,50,47
+
+// ForegroundColour=0,43,54
+// BackgroundColour=145,140,142
+// CursorColour=220,50,47
+
+// ForegroundColour=0,43,54
+// BackgroundColour=133,156,130
+// CursorColour=220,50,47
+
+// ForegroundColour=0,43,54
+// BackgroundColour=140,167,144
+// CursorColour=220,50,47
+
+// ForegroundColour=0,43,54
+// BackgroundColour=192,240,192
+// CursorColour=220,50,47
+
+// ForegroundColour=72,96,96
+// BackgroundColour=192,240,192
+// CursorColour=220,50,47
+
+// ForegroundColour=96,96,48
+// BackgroundColour=192,240,192
+// CursorColour=220,50,47
+
+// ForegroundColour=72,72,24
+// BackgroundColour=192,240,192
+// CursorColour=220,50,47
+
+// ForegroundColour=72,96,48
+// BackgroundColour=180,225,180
+// CursorColour=220,50,47
+
+// ForegroundColour=72,96,96
+// BackgroundColour=180,225,180
+// CursorColour=220,50,47
+
+// ForegroundColour=48,24,24
+// BackgroundColour=180,225,180
+// CursorColour=220,50,47
+
+// ForegroundColour=24,24,0
+// BackgroundColour=180,225,180
+// CursorColour=220,50,47
+
+// ForegroundColour=0,43,54
+// BackgroundColour=180,225,180
+// CursorColour=220,50,47
+
+// ForegroundColour=0,43,54
+// BackgroundColour=172,215,172
+// CursorColour=220,50,47
+
+// ForegroundColour=0,43,54
+// BackgroundColour=172,196,172
+// CursorColour=220,50,47
+
+// ForegroundColour=0,43,54
+// BackgroundColour=170,200,162
+// CursorColour=220,50,47
+
+// ForegroundColour=0,43,54
+// BackgroundColour=168,192,168
+// CursorColour=220,50,47
+
+// ForegroundColour=0,43,54
+// BackgroundColour=120,144,120
+// CursorColour=220,50,47
+
+// TODO: delete unnecessary colors.
+
+// #c0f0c0  #486060 -- 192,240,192  72,96,96  most common colors (background) and most least color (words) extracted from uploaded figure  http://www.coolphptools.com/color_extract#demo
+
+// #8ca790 100.0 % Envy (Green)  -- 140,167,144
+// Color Palette extracted from uploaded figure  http://labs.tineye.com/color/389d01e1e2e91f7f2aba08052a7f61f447a27daf?ignore_background=True&color_format=hex&ignore_interior_background=True
+
+// ForegroundColour=215,215,215
+// BackgroundColour=48,48,48
+// CursorColour=135,175,215
+Transparency=low
+Transparency=off
+RightClickAction=paste
+// 记录Cygwin下mintty配置文件  http://www.haiyun.me/archives/cygwin-mintty-config.html
+// color配色参考：https://github.com/jonathanfilip/lucius
+
+Locale=
+Charset=
+// 个人mintty配置  http://blog.csdn.net/wannianchuan/article/details/7027302
+
+Term=xterm-256color
+
+BoldAsFont=-1
+ClipShortcuts=yes
+// Black=0,0,0 A usable and good looking shell on windows.  https://www.trueneutral.eu/2014/win-proper-term.html
+// ForegroundColour=238,232,213
+// BackgroundColour=0,0,0
+// CursorColour=133,153,0
+// https://github.com/mavnn/mintty-colors-solarized/blob/master/.minttyrc.dark
+
+// // Black=7,54,66
+// // BoldBlack=0,43,54
+// // Blue: in C file, color of comment.
+// Blue=38,139,210
+// // BoldBlue: in bash, color of $PS1; in 'ls', color of directories.
+// // BoldBlue=131,148,150
+// // Cyan=42,161,152
+// // BoldCyan=147,161,161
+// // Green: in C file, color of keyword, eg, static, struct, unsigned long, void.
+// Green=133,153,0
+// // BoldGreen: in ls -l, color of executable file
+// BoldGreen=88,110,117
+// // Magenta: color of macro in *.[ch] file
+// Magenta=211,54,130
+// // BoldMagenta=108,113,196
+// // Red: in C file, color of string literal, color of included file.
+// Red=220,50,47
+// // BoldRed=203,75,22
+// // White=238,232,213
+// // BoldWhite=253,246,227
+// // Yellow=181,137,0
+// // BoldYellow=101,123,131
+
+// "basic, see "" ls
+CursorType=block
+RowSpacing=5    // in pixel, 0 1 2 ok, 5 as upper bound.
+// RowSpacing influence window size. 5:"-s 98 45", 2:"-s 98 49", 0:"-s 98 51 or 52". -p 81,630
+// font size, 20 pixel one row is good.
+// use Cygwin64 as main, 5 pixel RowSpacing, 98 45; cygwin as xhere, 2 , 98 54, tmux h split.
+
+// "ls, see " basic " color
+//
+
+// vim:cms=//%s:
+// rc/.minttyrc, used by cygwin. use Cygwin64 as main, cygwin as xhere in listary.

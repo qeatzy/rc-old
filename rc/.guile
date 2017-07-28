@@ -1,0 +1,6 @@
+(use-modules (ice-9 readline))
+(activate-readline)
+
+; "comment, begin with semicolon, up to end of line. 6.18.1.2 Comments  https://www.gnu.org/software/guile/manual/html_node/Comments.html#Comments
+; .guile, copy below line to ~/.guile
+; (load "notes/swo/rc/.guile")

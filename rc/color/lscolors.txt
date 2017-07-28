@@ -1,0 +1,11 @@
+https://linuxhint.com/ls_colors_bash/
+dircolors  # print default $LS_COLORS setting
+no 	Global default
+di 	Directory
+ex 	Executable file
+fi 	Normal file
+ln 	Symbolic link.
+bd 	Block device
+cd 	Character device
+or 	Symbolic link to a non-existent file
+*.extension 	Example, *.mp3

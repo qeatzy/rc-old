@@ -1,0 +1,23 @@
+{
+    "python.pythonPath": "C:\\pkg\\dt\\python3.7.4\\python.exe",
+    "vim.insertModeKeyBindings": [
+        {
+            "before": ["k", "j"],
+            "after": ["<Esc>"]
+        }
+    ],
+    "vim.normalModeKeyBindingsNonRecursive": [
+        {
+            "before": ["<space>", "s"],
+            "after": ["<C-s>"]
+        },
+        {
+            "before": ["<C-n>"],
+            "commands": [":nohl"]
+        }
+    ],
+    "terminal.integrated.shell.windows": "C:\\cygwin64\\bin\\zsh.exe",
+    "terminal.integrated.shellArgs.windows": [],
+    "workbench.colorTheme": "Solarized Light",
+    "workbench.iconTheme": "Monokai Pro Icons",
+}

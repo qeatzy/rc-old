@@ -1,0 +1,7 @@
+https://github.com/tmux/tmux/issues/696
+    nicm commented on Jan 26, 2018
+    This is wrong, it needs to be the TERM outside tmux not inside. TERM inside
+    tmux must be screen* or tmux*. Outside should be different, for most X
+    terminals it is xterm*.
+https://stackoverflow.com/questions/41783367/tmux-tmux-true-color-is-not-working-properly
+    The -sa instead of -ga was indeed the key factor to making true color work for me. Thank you! - joar Jun 14 '18 at 15:42

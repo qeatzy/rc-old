@@ -1,0 +1,25 @@
+# 1 Minimal GUI:
+sudo apt install xorg
+sudo apt install --no-install-recommends openbox
+# run startx manually
+# -- not usable, on vmware at least.
+
+# # 2 Minimal GUI with display manager:
+# sudo apt install xorg
+# sudo apt install --no-install-recommends lightdm-gtk-greeter
+# sudo apt install --no-install-recommends lightdm
+# sudo apt install --no-install-recommends openbox
+#
+# # 3 A more functional minimal desktop environment (the one I use):
+# sudo apt install xorg
+# sudo apt install --no-install-recommends lightdm-gtk-greeter
+# sudo apt install --no-install-recommends lightdm
+# sudo apt install --no-install-recommends lxde-icon-theme
+# sudo apt install --no-install-recommends lxde-core
+# sudo apt install --no-install-recommends lxde-common
+# sudo apt install --no-install-recommends policykit-1 lxpolkit
+# sudo apt install --no-install-recommends lxsession-logout
+# sudo apt install --no-install-recommends gvfs-backends
+# 
+# # https://askubuntu.com/questions/53822/how-do-you-run-ubuntu-server-with-a-gui
+# # vim:cms=#%s:

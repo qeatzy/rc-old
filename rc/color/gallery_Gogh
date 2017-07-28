@@ -1,0 +1,55 @@
+https://mayccoll.github.io/Gogh/
+https://github.com/Mayccoll/Gogh
+call _SUB()
+func _SUB() abort
+sil! 7,$s/\(FOREGROUND_COLOR\)=/\1_-3=/
+sil! 8,$s/\(BACKGROUND_COLOR\)=/\1_-2=/
+sil! 9,$s/\(CURSOR_COLOR\)="$FOREGROUND_COLOR"/\=submatch(1).'_-1="'.matchstr(getline(search('FOREGROUND_COLOR=','b')), '#[0-9a-fA-F]\{6\}').'"'/
+endfunc
+h matchstr(
+h submatch
+
+
+[borland]
+r! 2>1 wget -O- https://raw.githubusercontent.com/Mayccoll/Gogh/master/themes/borland.sh | grep COLOR
+export COLOR_01="#4f4f4f"           # HOST
+export COLOR_02="#ff6c60"           # SYNTAX_STRING
+export COLOR_03="#a8ff60"           # COMMAND
+export COLOR_04="#ffffb6"           # COMMAND_COLOR2
+export COLOR_05="#96cbfe"           # PATH
+export COLOR_06="#ff73fd"           # SYNTAX_VAR
+export COLOR_07="#c6c5fe"           # PROMP
+export COLOR_08="#eeeeee"           #
+export COLOR_09="#7c7c7c"           #
+export COLOR_10="#ffb6b0"           # COMMAND_ERROR
+export COLOR_11="#ceffac"           # EXEC
+export COLOR_12="#ffffcc"           #
+export COLOR_13="#b5dcff"           # FOLDER
+export COLOR_14="#ff9cfe"           #
+export COLOR_15="#dfdffe"           #
+export COLOR_16="#ffffff"           #
+export BACKGROUND_COLOR_-2="#0000a4"   # Background Color
+export FOREGROUND_COLOR_-3="#ffff4e"   # Text
+export CURSOR_COLOR_-1="#ffff4e" # Cursor
+
+[ocean]
+r! 2>1 wget -O- https://raw.githubusercontent.com/Mayccoll/Gogh/master/themes/ocean.sh | grep COLOR
+export COLOR_01="#000000"           # HOST
+export COLOR_02="#990000"           # SYNTAX_STRING
+export COLOR_03="#00a600"           # COMMAND
+export COLOR_04="#999900"           # COMMAND_COLOR2
+export COLOR_05="#0000b2"           # PATH
+export COLOR_06="#b200b2"           # SYNTAX_VAR
+export COLOR_07="#00a6b2"           # PROMP
+export COLOR_08="#bfbfbf"           #
+export COLOR_09="#666666"           #
+export COLOR_10="#e50000"           # COMMAND_ERROR
+export COLOR_11="#00d900"           # EXEC
+export COLOR_12="#e5e500"           #
+export COLOR_13="#0000ff"           # FOLDER
+export COLOR_14="#e500e5"           #
+export COLOR_15="#00e5e5"           #
+export COLOR_16="#e5e5e5"           #
+export BACKGROUND_COLOR_-2="#224fbc"   # Background Color
+export FOREGROUND_COLOR_-3="#ffffff"   # Text
+export CURSOR_COLOR_-1="#ffffff" # Cursor

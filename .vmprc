@@ -1,0 +1,454 @@
+" # append two lines to ~/.vimperatorrc, using below bash command.
+ printf $'let my_current_platform = 2 \n so ~/notes/.vmprc' >> ~/.vimperatorrc
+" -- note 1 for linux (eg, ubuntu), 2 for windows, 3 for cygwin, etc.
+
+
+js <<EOF
+    // test case http://www.itwendao.com/article/detail/216216.html
+    // Kill sticky headers  https://alisdair.mcdiarmid.org/kill-sticky-headers/
+var unfixElement = function () {
+    // alert(window.content.window.document.querySelectorAll);
+    var i, elements = window.content.window.document.querySelectorAll('body *');
+    // alert(elements.length);
+    for (i = 0; i < elements.length; i++) {
+        if (getComputedStyle(elements[i]).position == 'fixed') {   // static fixed absolute relative
+            elements[i].parentNode.removeChild(elements[i]);
+            // alert(elements[i]);
+            // getComputedStyle(elements[i]).position = 'float';
+        }
+    }
+};
+var del_zhihu_header = function () {
+    unfixElement();
+    // // How do I getElementByID in Vimperator?  https://stackoverflow.com/a/16027196/3625404
+    // let headers = [window.content.window.document.getElementsByClassName("zu-top")[0],
+    //                 window.content.window.document.getElementsByClassName("AppHeader-inner")[0]];   // TODO: not work, why?
+    // for (let elem of headers) {
+    //     if (elem) {
+    //         elem.parentNode.removeChild(elem);
+    //     }
+    // }
+    // let coll = window.content.window.document.getElementsByClassName("Sticky AppHeader");
+    // alert(coll.length);
+    // let elem = coll[0];
+    // alert(elem);
+    // elem.parentNode.removeChild(elem);
+};
+var del_stackoverflow_header = function () {
+    unfixElement();
+    // var document = window.content.window.document;
+    var node = window.content.window.document.getElementById("noscript-warning");
+    // alert(window.content.window.document);
+    node.parentNode.removeChild(node);
+    // var headers = [document.getElementById("noscript-warning")];
+    // for (var node of headers) {
+    //     node.parentNode.removeChild(node);
+    // }
+};
+EOF
+
+" let autocmd_loaded = 1
+" remove all autocmd via 'au!'
+" au!
+" autocmd DOMLoad .* js unfixElement()
+" au DOMLoad .*stackoverflow.com/.* js del_stackoverflow_header()
+" au DOMLoad .*zhihu.com/.* js del_zhihu_header()
+
+map <F1> <Nop>
+map <C-n> <Nop>
+map w <Nop>
+map q <Nop>
+" nnoremap q <C-w>
+nnoremap q D
+nnoremap e d
+
+"status
+nnoremap \h :set statuslinevisibility=hidden<CR>
+nnoremap \v :set statuslinevisibility=visible<CR>
+set statuslinevisibility=visible
+set hintchars=hjklasdfgyuiopqwertnmzxcvb
+highlight Hint font-family: Consolas; font-size: 16px; font-weight: bold; text-shadow: -1px -1px 2px black, 1px -1px 2px black, -1px 1px 2px black, 1px 1px 2px black; color: #33cccc;
+highlight HintElem color: gray; background-color: #a1e4e6;
+highlight HintActive color: black; background-color: #ff8700;
+hi ErrorMsg color:white; background-color: #ec6aa1;
+
+" command history number
+set history=100000000
+set status=zoomlevel,input,location,bookmark,history,tabcount,position,ssl
+" function SwitchHintMotionMode()
+" nnoremap <F6> SwitchHintMotionMode(args)
+
+"todo
+" use ahk and native shortcut to do something more than vmp can do.
+"+ eg, use Context menu key to fast tile tab,
+"+ use <C-S-c> to delete html elements, instead of invoke ',q' nnoremap ,q i<C-S-c>
+
+"link, "extended hint mode, "hint mode
+"keymap, q and g as alternative prefix besides <Leader>
+nnoremap gy ;y
+nnoremap gjy ;Y
+" nnoremap qy ;Y
+
+" command -count GoNextTab :tab
+"debug, "error
+" below setting cause vimperator to not responding,
+:command! -count MoveTabLeft :execute " tabmove -" + (<count> || 1) 
+" bug about <count>: https://github.com/vimperator/vimperator-labs/issues/447
+command! -count GoNextTab :normal <count>gt<CR>
+" nnoremap gp :GoNextTab<CR>
+command -nargs=0 echoCurrentURL :execute "!echo " + content.location.href
+
+"Leader, use <Space> as leader, g/q/gj/gk/,/slash as alternative leader ("prefix)
+" To Enable map <Space>
+js <<EOM
+  window.addEventListener('keypress',function (event) {
+    var code=event.charCode;
+    if ((liberator.mode === modes.INSERT && modes.extended === modes.MENU)
+    ||(liberator.mode ==modes.NORMAL && code==32)
+    ||(liberator.mode ==modes.COMMAND_LINE && code !=32)){
+      let map = mappings.get(liberator.mode, events.toString(event));
+      if (map) {
+        event.preventDefault();
+        event.stopPropagation();
+        map.execute();
+      }
+    }
+  },false);
+EOM
+" https://github.com/vimperator/vimperator-labs/issues/10
+" My Customization
+" let mapleader = " "
+let mapleader="\"
+nnoremap <Leader>m :tabm 
+nnoremap <Leader>t :MoveTabLeft<CR>
+nnoremap ,m :tabm -1<CR>
+nnoremap ,n :tabm +1<CR>
+nnoremap <Leader>b :tabclose<CR>
+
+"version
+" nnoremap ,n :nmap<CR>
+
+"unused key
+" w unused since I don't use window.
+nnoremap <C-Tab> <C-^>
+nnoremap <C-j> j
+nnoremap <C-k> k
+
+"general
+nnoremap <C-S-r> :restart<CR>
+nnoremap R :source ~/.vimperatorrc<CR>
+nnoremap \r :source ~/.vimperatorrc<CR>
+"help, faster help
+nnoremap <C-h> :h <C-v><CR>/<C-v><CR>n
+"search
+" nnoremap q/ /<C-v><CR>
+
+
+"nnoremap d <C-w>
+"nnoremap d :q<CR>
+"nnoremap s ;y
+nmap s k
+nmap d j
+nnoremap x ;F
+" nnoremap ;f ;F
+nnoremap <BS> <C-o>
+"nnoremap gh g$
+nnoremap gh <C-^>
+nnoremap gv <C-^>
+"nnoremap P P<C-^>
+nnoremap P :tabopen <C-v><CR><C-^>
+nnoremap gl <Right>
+"nnoremap <C-h> :h<Space>
+"set 'scroll' option for move line numbers of <C-u>, <C-d>
+nnoremap <C-e> <C-u>
+nnoremap j <C-f>3k
+nnoremap k <C-b>3j
+"nnoremap jn <End>
+nnoremap ,j <G>
+nnoremap ,k <gg>
+"nnoremap ki <Home>
+nnoremap H <Left>
+nnoremap L <Right>
+nnoremap gH <Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left>
+nnoremap gL <Right><Right><Right><Right><Right><Right><Right><Right><Right><Right><Right>
+
+nnoremap zt :stopall<CR>
+nnoremap ,t :stop<CR>
+"buffer, "tab, switch/fork/delete
+nnoremap g9 :tablast<CR>
+nnoremap g8 2gt
+nnoremap gs :buffer! .bing.<CR>
+nnoremap g; :buffer! .bing.<CR>
+nnoremap h <C-p>
+nnoremap l <C-n>
+nnoremap <C-f> F
+
+" visual mode, copy
+vnoremap kj <Esc><Esc><Esc>
+
+" sidebar, sb[ar]
+nnoremap <F8> :sbcl<CR>
+nnoremap gkd :sbclose<CR>
+nnoremap gkh :sbar History<CR>
+nnoremap gkj :sbar Downloads<CR>
+nnoremap gkb :sidebar Bookmarks<CR>
+" firefox shortcut to inspect element
+" <C-S-l>
+nnoremap ,d i<C-S-l>
+"<C-S-i>"
+" <C-S-c> to toggle Inspect-Element
+nnoremap ,q i<C-S-c>
+map g<F1> :emenu View.Firebug<CR>
+map 1<F1> :emenu View.Firebug<CR>
+nnoremap ,f :emenu View.Firebug<CR>
+nnoremap ,, :emenu View.Firebug<CR>
+nnoremap ,b :emenu Tools.Keybinder<CR>
+nnoremap <C-n> :emenu View.Firebug<CR>
+
+" history, jump
+nnoremap <A-i> :forward!<CR>
+nnoremap <A-o> :back!<CR>
+
+" info
+nmap M :qmarks<CR>
+nnoremap K :marks<CR>
+nmap U :nmap<CR>
+nnoremap S gi<C-t>dd<Esc>
+nnoremap <C-g> g<C-g>
+
+"invoke("start)
+nnoremap \r :restart<CR>
+nnoremap ,r :restart<CR>
+
+" tab management
+nnoremap gd :tabduplicate<CR>:tabprevious<CR>
+nnoremap gld :tabduplicate<CR>:tabprevious<CR>
+nnoremap gll :reload!<CR>
+nnoremap ,s :stop<CR> "+ browser said 'No ! allowed'.
+" nnoremap ,sa :stopall<CR>
+" use ,e to go another pdf page to do search, then gh to go back
+nnoremap ,e 2b
+nnoremap g1 1b
+nnoremap g2 2b
+nnoremap g3 3b
+nnoremap g4 4b
+nnoremap g5 5b
+" tabgroups
+"+ previously use comma to switch tabgroup, but seems 
+"+ it's less used opration, thus map to more frequently used 
+"+ operation such as search with a keyword, eg 'vim', 'java'.
+"+ tabgroup switch could use something like 'glv'.
+nnoremap ,v gi<C-e><C-u>vim 
+"nnoremap ,s gi<C-e><C-u>vim 
+":nnoremap <buffer> <F2> 
+"better use gpj, gtj, gjj, gjs, something similar.
+"nnoremap ,j :tabgroups switch java<CR>
+"nnoremap ,g :tabgroups switch general<CR>
+"nnoremap ,p :tabgroups switch python<CR>
+"nnoremap ,v :tabgroups switch vim<CR>
+"nnoremap ,x :tabgroups switch unix<CR>
+
+
+" always stay in normal mode after page load
+set focuscontent=true
+" set editor, evoked by i^i,
+set editor='gvim -f'
+set editor="urxvt -e vim -i ~/.viminfoj"
+set editor="gnome-terminal -e vim"
+set editor="uxterm -e vim -i ~/.viminfoj -S ~/.vimff.session"
+" Setting an external editor in Vimperator  https://superuser.com/questions/186782/setting-an-external-editor-in-vimperator
+" set editor='emacs --daemon'
+" set editor='emacs'
+""editing, both cmdline and insert mode involved
+" abbreviation, -j option for javascript 
+"+ wk for wikipedia, both mode
+"+ change to iwk, wk, k conflict with kj
+cabbrev dirs directory
+cabbrev ff firefox
+cabbrev vmp vimperator
+cabbrev fj set
+cabbrev idj intellij idea
+iabbrev idj intellij idea
+cabbrev envv environment variable
+cabbrev specch special character
+cabbrev fm emenu 
+"cabbrev bilib bilibi
+cabbrev iwk wikipedia
+iabbrev iwk wikipedia
+" return to normal mode, both mode
+cnoremap kj <Esc>
+" wanna to use <M-j> to copy current typed content in cmdline, but failed.
+"+cnoremap <M-j>
+inoremap kj <Esc>
+"insert
+" remap i^i to workaround site with internal keymaps
+inoremap ,i <C-i>
+inoremap <C-d> <C-t>ddi
+inoremap <C-j> <Down>
+"inoremap <C-k> <Up>
+inoremap [ <Left>
+inoremap ] <right>
+inoremap <C-n> <C-Left>
+inoremap <C-p> <C-right>
+inoremap <C-m> <CR>
+
+
+" hide message after specified time, in ms. 
+set messagetimeout=5000
+" hint settings
+set hinttimeout=3000
+set showmode
+set ignorecase
+set smartcase
+"see :h highlight
+"highlight! Hint font-family: monospace; font-size: 16px; font-weight: bold; text-transform: uppercase; color: white; background-color: red; border-color: ButtonShadow; border-width: 0px; border-style: solid; padding: 0px 1px 0px 1px;
+"highlight Hint font:"DejaVu Sans Mono";font-size:120%;color:red;background-color:yellow;padding:2px;
+" set the working directory you can save URLs to that location with a simple :w<Enter>:
+"cd C:/Users/GGustafson/Desktop
+" see :h 'wildmode'
+" complete 
+" see :h cpt/complete
+set complete=slb
+" seems 'wildmode' and 'cpt' helps access :emenu command
+
+
+" error preventing, as disable <C-q> in firefox
+command! qall xall
+
+"" search engine, via keyword or search engine name
+"+ an example for via keyword.
+" bmark https://encrypted.google.com/search?sclient=psy&hl=en&complete=0&site=webhp&source=hp&q=%s -keyword g
+bmark https://www.google.com/search?sclient=psy&hl=en&complete=0&site=webhp&source=hp&q=%s -keyword g
+set defsearch=g
+" set defsearch=google
+"" excerpt for reminder when switch to encgoogle, 
+"+ 'Get to Google faster. Switch your default search engine to Google.'
+
+
+" cmdline
+" seems <C-m> as <CR>, and <C-h> as <BS> already
+" nnoremap q; ;
+nnoremap ; :
+"nnoremap [[ ;
+cnoremap ; <Esc>
+cnoremap <C-j> <Down>
+cnoremap <C-k> <Up>
+"cnoremap <BS> <C-a>
+"cnoremap <C-h> <BS>
+cnoremap <C-y> <C-u>
+cnoremap <C-o> <S-Tab>
+cnoremap <C-i> <Tab>
+cnoremap <C-l> <End>
+cnoremap <C-;> <Left>
+cnoremap <C-\'> <right>
+cnoremap <C-n> <C-Left>
+cnoremap <C-p> <C-right>
+
+"ls, see " bks
+
+" bks.bks
+"books, "bks
+" TODO: nnoremap gjm3 to j -> <C-f>3j && k -> <C-b>3k -- current workaround source file, instead of define function.
+nnoremap gjk1 souce ~/notes/mc/jk1.bks<CR>
+nnoremap gjk2 souce ~/notes/mc/jk2.bks<CR>
+nnoremap gjk3 souce ~/notes/mc/jk3.bks<CR>
+nnoremap gjk4 souce ~/notes/mc/jk4.bks<CR>
+nnoremap gjk5 souce ~/notes/mc/jk5.bks<CR>
+nnoremap gjk6 souce ~/notes/mc/jk6.bks<CR>
+nnoremap gjk7 souce ~/notes/mc/jk7.bks<CR>
+nnoremap gjk8 souce ~/notes/mc/jk8.bks<CR>
+nnoremap gjk9 souce ~/notes/mc/jk9.bks<CR>
+nnoremap E :source E:/notes/bks.bks<CR>
+" nnoremap E :source E:/notes/mc/jk0.bks<CR>
+"epub book reading
+nnoremap gm gn
+"nnoremap gp <C-Up>
+"nnoremap gn <C-Down>
+" nnoremap [[ <Nop>
+" nnoremap [f <Nop>
+" nnoremap ]f <Nop>
+" nnoremap ]] <Nop>
+" nnoremap [[ <C-Up>
+" nnoremap ]] <C-Down>
+
+"history, see " marks " qmarks
+
+"bmarks
+nnoremap a a -tags 
+
+"marks(bmark), see " qmarks " hist
+nnoremap mw mW
+nnoremap \'w `W
+nnoremap me mE
+nnoremap \'e `E
+nnoremap mr mR
+nnoremap \'r `R
+nnoremap mt mT
+nnoremap \'t `T
+nnoremap ma mA
+nnoremap \'a `A
+nnoremap ms mS
+nnoremap \'s `S
+nnoremap md mD
+nnoremap \'d `D
+nnoremap mf mF
+nnoremap \'f `F
+nnoremap mg mG
+nnoremap \'g `G
+nnoremap mz mZ
+nnoremap \'z `Z
+nnoremap mx mX
+nnoremap \'x `X
+nnoremap mc mC
+nnoremap \'c `C
+nnoremap mv mV
+nnoremap \'v `V
+
+"qmarks, see " marks " hist
+qmark 1 file:///E:/bks/ndal/web/HTTP%20The%20Definitive%20Guide%20[2002][David%20Gourley,%20Brian%20Totty](Bokos-Z1).pdf
+"file:///E:/docs/sh/[ABS]Advanced%20Bash-Scripting%20Guide.htm 
+qmark 2  file:///E:/docs/sh/Bash%20Reference%20Manual.htm 
+qmark 3  file:///E:/docs/sh/Introduction%20to%20Linux.htm 
+qmark 4  file:///E:/docs/sh/GNU_Linux%20Command-Line%20Tools%20Summary.htm 
+qmark 8  file:///home/qeatzy/bks/ndal/misc/fitness/yjj_28.pdf
+qmark a  https://www.amazon.cn/ 
+qmark A  https://www.amazon.com/
+qmark b  http://bookos-z1.org/ 
+"tor version http://zlibraryexau2g3p.onion  or search 'network top down' (but you can use tor).  after login and open new page then click login this page appeared http://book4you.org/?signAll=1
+" tor is a modified firefox  https://torproject.org/download
+" http://singlelogin.org/
+qmark b  http://b-ok.org/ 
+qmark B  https://www.baidu.com
+" qmark c  file:///E:/bks/ndal/scripting/bash%20Cookbook%20[2007][Carl%20Albing,%20et%20al]%28Bokos-Z1%29.pdf 
+qmark c about:config
+qmark C  about:preferences#content 
+"pydoc, pydoc -p 9999
+qmark d  http://localhost:9999/
+qmark d  http://localhost:9999/sys.html
+qmark D  about:preferences#advanced 
+qmark e  http://www.bilibili.com/account/history
+qmark i  http://www.bilibili.com/
+qmark g  https://www.google.com/ 
+qmark j  https://www.jd.com/ 
+" below conditionally add qmark, from https://stackoverflow.com/a/45149166/3625404
+js if(options["shell"]=="/bin/bash"){quickmarks.add("k", "file:///home/qeatzy/bks/ndal")}else{quickmarks.add("k","file:///E:/bks/ndal")};
+js if(options["shell"]=="/bin/bash"){quickmarks.add("K", "file:///home/qeatzy/bks/mf")}else{quickmarks.add("K","file:///E:/bks/mf")};
+" qmark k file:///home/qeatzy/bks/ndal
+" qmark k file:///E:/bks/ndal
+" -- add after this this file
+qmark l https://leetcode.com/problems/random-one-question/
+" qmark l  https://leetcode.com/discuss/user/qeatzy 
+qmark m  https://mail.163.com 
+qmark M  https://music.163.com 
+qmark o  http://opac.nju.edu.cn/ 
+qmark p  http://p.nju.edu.cn 
+qmark P file:///C:/Users/Dell/code/py/doc/python-2.7.13-docs-html/tutorial/modules.html
+qmark r file:///E:/bks/ndal/regex/Mastering_Regular_Expression[3E,%202006][Jeffrey_E.F._Friedl].pdf
+qmark S  about:preferences#security 
+qmark t  https://www.taobao.com/
+qmark w  https://web.wechat.com/
+qmark X  http://127.0.0.1:8085/ 
+qmark x  https://xkcd.com/892/
+qmark z  https://www.zhihu.com/ 
+
+" .vmprc, swo/vmp.soc  .exvmp

@@ -1,0 +1,207 @@
+# set -x
+
+co() { "$HOME/notes/swo/rc/color/themes_raw.py" "$@"; }
+
+# alias ll='ls -alh'      # in non-interactive shell, alias is not used.
+function ll() { ls -alh "$@"; }      # in non-interactive shell, alias is not used.
+# alias wh='command -v'   # use shell builtin hash, command -v, type -P. not external command which.
+function wh() { command -v "$@"; }
+function w() { whatis "$@"; }
+if hash ag &>/dev/null; then function grep () { ag "$@"; } fi
+
+# "fn # folder utility # folder empty create
+_FEC() { mkdir -p "$1" && rm -rf "$1"/*; };
+_FE() { [ -d "$1" ] && rm -rf "$1"/*; };
+
+function ns() { nvidia-smi; }   # not work with :term yet, in vim type <M-x> <Space> ns <Enter>
+
+# "test, 
+# [[ $- == *i* ]]   && echo interactive || echo non-interactive    
+
+# "vi
+function v-() { vim -c "set path=$PWD" -c "set bt=nofile" -c "nn q :q<CR>" --cmd 'let g:ctrlp_cache_dir="~/swo/.cache/ctrlp/v-"' -; }
+# Tmm vim <(sdefag)
+# Tmm 'sdefag|v-; bash'
+# Tmm man man|less
+# Tmm vim <(typeset -f)
+# Tmm echo hello|v-
+# Tmm 'ls; bash -l'
+
+# "python, see " ls
+function py() { python "$@"; }
+function py2() { python2 "$@"; }
+function py3() { python3 "$@"; }
+
+# "ls, see 
+#     " vi " python
+#     " ag
+
+# "ag
+function defag() { # find python definition
+    ag '^ *def '"$1";
+}
+function sdefag() { # find python definition, use Gf_search() in .vimrc, literal string input preferred.
+    if (($# == 0)); then
+        ag '^ *def ';
+    else
+        ag '^ *def '"$1" |sed 's/$/'"\\/def $*\\/"'/';
+    fi
+}
+function sbdefag() { # find python definition, search + word boundary, see sdefag.
+        ag '^ *def \b'"$1"'\b' |sed 's/$/'"\\/def $*\\\\>\\/"'/';
+}
+function psd() { sdefag "$@"; }
+
+fd() { command fd "$@" | cygpath --ignore --file -; }  # https://github.com/sharkdp/fd/issues/153
+fzf() { TERM= command fzf "$@" ; }
+function fag {  # find then ag, ignore some directories and file.
+    # find . -not \( -path r -prune \) -not \( -path code -prune \) -iname '*'"$*"'*';    # TODO: add ignore files.
+    find . -not \( -path ./r -prune \) -not \( -path ./code -prune \) -iname '*'"$*"'*';    # TODO: add ignore files.
+    # find|ag "$*";
+}
+
+# TODO? lbag: left + bag
+function bag() {
+    if (( $# == 1 )) ; then
+        ag "\b$1\b";
+    elif (( $# < 1 )) ; then
+        :
+    else
+        ag "$*";
+    fi
+}
+
+# copied from .bashrc
+function mcd() {  # mkdir -p list_of_dir && cd list_of_dir[-1]. currently only first word (contain non-space solely) was used.
+    if [ "$#" -ne 1 ]; then
+        printf "Too many or to few arguments. only one is expected.\n exited.";
+        return 1;
+    elif ! cd "$1" &>/dev/null; then
+        mkdir -p "$1" && cd "$1";
+    fi
+}
+
+# "text
+uniq-basename() { awk -F/ '{if(c[$NF]++==0) l[$NF]=$0; if(c[$NF]==2)print(l[$NF]); if(c[$NF]>1)print;} ' "$@"; }
+
+# copied from ~/.bashrc
+function h() {
+# "TODO, add --help option, add -option to not open vi or specify pager, add debug switch to silent or not-silent stderr. possibly use getopts?
+# "caution: this function should only used interactively because there is security hole.
+# eg, any command is run verbatim, which could be very dangerous when used
+# non-interactively.
+if (( $# == 0 )); then
+    echo "error: too few arguments. which command's help file do you want to see?" &&
+        return 1;   # or as default, invoke help of builtin, or man bash?
+    # "$*" --help;
+    # if "$*" --help; then
+    # "$*" --help |v'+color peaksea';
+    # seoul256
+else
+    # 1. space in argument(s)
+    # for git, 'git commit -h' for usage and option,  'git commit --help' for man git-commit
+    if [[ "$@" =~ " " ]]; then "$@" --help;
+        return $?;
+    fi
+    # bash builtin, 'function case time select [ { [[' are keyword, 'builtin test' is builtin.
+    # compgen -kb
+    local TYPE="$(type -t $@)"; 
+    if [ "$TYPE" = builtin -o "$TYPE" = keyword ]; then help "$@";
+        return $?;
+    fi
+    local ERRNO="";   # a fix for unbound variable when 'set -euo pipefail'.
+    outfile=~/.tmphelp
+    # todo: some command display help and exit with exit code 1. eg, showkey, eject.
+    if "$@" -help &> $outfile;  then       # for vim, 'vim -h' is prefered than 'vim --help'
+        :   # null command
+    elif "$@" --help &> $outfile;  then       # most case. eg, 'vim --help'
+        # echo help file retrieved successfully. via suffix '--help';
+        :
+    elif "$@" -h &> $outfile;  then      # some rare case, eg, 'java -help'.
+        # some command always return 1, even for valid -help option, eg, more, java, jdb.
+        :
+    else
+        # echo else
+        ERRNO=1;
+    fi
+    if [[ $- != *i* ]]; then
+        { cat $outfile; return; }      # non-interactive shell, cat instead of vim.
+    # elif [ "" != $ERRNO ]; then
+    #     echo COMMAND FAILED. help file not found.;
+    else
+        # vi $outfile '+color peaksea' -c 'setlocal noswapfile' -c 'setlocal bt=nofile';
+        vi $outfile -c 'setlocal noswapfile' -c 'setlocal bt=nofile';   # in case color peaksea not exist
+    fi
+    return $ERRNO;
+    # echo "error: too many arguments. 1 is expected.";
+fi
+}
+
+# copied from .bashrc
+function v() {
+# finished: add apt package search if not command, eg, libc6
+if (( $# == 0 )); then
+    echo "error: too few arguments. 1 is expected.";
+    return 1;
+elif (( $# == 1 )); then
+    if "$@" --version 2>/dev/null || "$@" -version 2>/dev/null; then
+        # echo version info retrieved successfully.;
+        :
+    else
+        apt-cache show "$@" | grep '^Package|^Version';
+        # echo COMMAND FAILED. version info not found.;
+        # return 2;
+    fi
+else
+    echo "error: too many arguments. 1 is expected.";
+    return 3;
+fi
+}
+
+# "browser, "firefox
+if [[ "$OSTYPE" == "cygwin" ]]; then
+    function ff() { /cygdrive/d/pkg/dt/firefox/firefox.exe "$@"; }
+    function firefox() { /cygdrive/d/pkg/dt/firefox/firefox.exe "$@"; }
+elif [[ "$OSTYPE" == "linux-gnu" ]]; then
+    function ai() { sudo apt-get install "$@"; }
+    function as() { apt-cache search "$*"; }
+fi
+
+# "apt
+    function s() { if [[ $- != *i* ]]; then apt-cache search --names-only "$@"; else apt-cache search --names-only "$@" | v-; fi; }
+    function ss() { if [[ $- != *i* ]]; then apt-cache search "$@"; else apt-cache search "$@" | v-; fi; }
+    function show() {
+        outfile=~/.tmphelp
+        if apt-cache show "$@" > $outfile && [ $(wc -l $outfile |cut -d" " -f1) -gt 2 ] ; then     # second test for virtual package, eg ctags
+            :;
+        else
+            apt-cache search --names-only "$@" > $outfile;
+        fi
+        if [[ $- != *i* ]]; then 
+            cat $outfile;
+        else
+            cat $outfile | v-;
+        fi
+    }
+
+# set -x
+# "awk
+# nnoremap qr :.w !awk 'BEGIN{print "awk \47 BEGIN{"} {print} END{print "}\47 " args}' \|bash<CR>|"" wrap code in BEGIN block
+# nn , :'<,'>w !pgawk<CR>
+# nn [ @:
+function pgawk () {
+    # awk -f <(awk 'BEGIN{print "awk \47"} {print} END{print "\47"}') 
+    # awk 'BEGIN{print "awk \47"} {print} END{print "\47"}' 
+    # awk -v args="$@" 'BEGIN{print "awk \47"} {print} END{print "\47 " args}' |bash
+    awk -v args="$@" 'BEGIN{print "awk \47 BEGIN{"} {print} END{print "}\47 " args}' |bash # wrap code in BEGIN block
+    # awk -f /dev/stdin "$@"
+}
+function pgshawk () {
+    awk '/^\s*[$>]/ { $1 = ""; print }' |bash   # line begin '$' or '>' are command, begin with '-' are output
+}
+
+# (obsolete) init file used within vim when invoke shell command(s).
+# (obsolete) bash --init-file ~/notes/.bvimbrc
+# echo Here is ~/notes/.bvimbrc
+# .bvimbrc, bashrc used for invoke bash inside vim, works if environment variable BASH_ENV set to this file.
+# .bashrc .vimrc

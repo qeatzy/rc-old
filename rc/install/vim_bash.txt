@@ -1,0 +1,2 @@
+echo "[ -f $HOME/rc/.bashrc ] && . $HOME/rc/.bashrc" >> ~/.bashrc
+echo "so $HOME/rc/.vimrc" >> ~/.vimrc

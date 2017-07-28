@@ -1,0 +1,7 @@
+BoldAsFont=-1
+Term=xterm-256color
+Scrollbar=none
+CursorType=block
+CtrlExchangeShift=yes
+Font=Consolas
+FontHeight=14

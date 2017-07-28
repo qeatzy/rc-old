@@ -1,0 +1,12 @@
+tmux new-session -d -s qeatzy
+ 
+tmux new-window -t qeatzy:1 -n 'notes' 'cd /home/qeatzy/notes && bash'
+tmux new-window -t qeatzy:2 -n 'java' 'cd /home/qeatzy/code/java && bash && vn'
+tmux new-window -t qeatzy:3 -n 'tmp' 'cd /home/qeatzy/tmp && bash'
+tmux new-window -t qeatzy:4 -n 'swo' 'cd /home/qeatzy/swo && bash'
+tmux new-window -t qeatzy:5 -n 'ranger' 'cd /home/qeatzy/ && ranger'
+tmux new-window -t qeatzy:6 -n 'bks' 'cd /home/qeatzy/bks && bash'
+tmux new-window -t qeatzy:7 -n 'download' 'cd /home/qeatzy/ffld && bash'
+ 
+tmux select-window -t qeatzy:1
+tmux -2 attach-session -t qeatzy
