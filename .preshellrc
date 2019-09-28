@@ -12,7 +12,7 @@ fi
 }
 
 export h1='qeatzy@39.98.211.228'    # macheng 2019.08
-h0=root@207.246.69.79
+h0=root@144.202.74.243
 proxy () {
     case $1 in
         -k)
@@ -35,9 +35,10 @@ alias to=proxy
 ms() {
     num="$1";
     _h0="$2"
+    echo $num $_h0
     if num=$((num+0)) && [ -n "$_h0" ]; then
         case "$_h0" in *@*) ;; *) _h0="root@$_h0";; esac
-        echo "export h$num=$_h0 ip$num='${_h0#*@}' u0='${_h0%%@*}'";
+        echo "h$num=$_h0 ip$num='${_h0#*@}' u0='${_h0%%@*}'";
         shift 2;
         # echo $# args
         # set -x
@@ -56,6 +57,9 @@ ms() {
 for i in {0..5}; do
     if eval "[ \$h$i ]"; then
         eval "s$i() { ms $i \$h$i \"\$@\"; }"
+        eval "_h0=\$h$i"
+        case "$_h0" in *@*) ;; *) _h0="root@$_h0";; esac
+        eval "export h$i=$_h0 ip$i=${_h0#*@} u0=${_h0%%@*}";
         # echo has h$i;
     fi
 done

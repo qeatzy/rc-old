@@ -1,0 +1,9 @@
+~/.vim/after/syntax/ c.vim  # use additional syntax rule for c language
+https://vi.stackexchange.com/questions/4975/how-can-i-add-additional-syntax-highlighting-rules-in-my-local-vimrc
+
+https://stackoverflow.com/questions/58825/javascript-syntax-highlighting-in-vim
+https://github.com/jelera/vim-javascript-syntax
+vim-javascript-syntax
+
+# mcd ~/tmp/color/vim-syntax && git clone https://github.com/jelera/vim-javascript-syntax
+# vim: cms=#%s path+=~/tmp/color/vim-syntax

@@ -240,8 +240,8 @@ function hh() { help $1 | less ; }
 function hj {  "$@" --help  | less ; }
 
 # "time,"date
-alias date='\date "+%Y-%m-%d_%H:%M"'
-alias dates='\date "+%Y-%m-%d_%H:%M:%S"'    # date second
+# alias date='\date "+%Y-%m-%d_%H:%M"'
+# alias dates='\date "+%Y-%m-%d_%H:%M:%S"'    # date second
 
 function crun { make $1 && ./$1; }  # make and run for simple c program
 

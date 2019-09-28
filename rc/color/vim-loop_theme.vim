@@ -71,6 +71,9 @@ func! Loop_themes(dir, ...)
     endif
     let x = g:d_loop_theme[a:dir]
     let length = len(x[1])
+    if has_key(a:, 2) && has_key(a:, 3)
+        let x[0] = (a:2 == 0 ? a:3 : (x[0] + a:2*a:3))
+    endif
     if x[0] >= length || x[0] < 0
         let x[0] = (x[0] + length) % length
     endif
@@ -82,6 +85,7 @@ func! Loop_themes(dir, ...)
     if n == 0
         exec 'sil! !cat ' . x[1][x[0]] . '&'
         redraw!
+        echo x[0] x[1][x[0]]
         return
     endif
     let step = n>0? 1 : length-1
@@ -109,9 +113,10 @@ func! Show_theme(count)
     elseif a:count > len(name)
         echo "last" name[-1] len(name) "total" 
     else
-        let x[0] = a:count
+        " let x[0] = a:count
         " echo x[0] name[x[0]]
-        call Loop_themes(g:color_dir,0)
+        " call Loop_themes(g:color_dir,0)
+        call Loop_themes(g:color_dir,0,0,a:count)
     endif
 endfunc
 
@@ -128,16 +133,18 @@ func! Toggle_mode_loop_theme()
     if !get(g:, '_b_Toggle_mode_loop_theme', 0)
         echo 'Toggle_mode_loop_theme on'
         let g:_b_Toggle_mode_loop_theme = 1
-        nn  <expr> j Loop_themes(g:color_dir,1)
-        nn  <expr> k Loop_themes(g:color_dir,-1)
+        nn j :<C-u>call Loop_themes(g:color_dir,0,1,v:count1)<CR>
+        nn k :<C-u>call Loop_themes(g:color_dir,0,-1,v:count1)<CR>
         " let g:_save_timeout = [&timeout, &ttimeout]
         " set notimeout nottimeout
         nn f :<C-u>call Show_theme(v:count)<CR>
         " noremap r <C-c>
         " lnoremap r <C-c>
-        let g:__saved_mapping =  Save_mappings(['s','S'],'n',1)
+        let g:__saved_mapping =  Save_mappings(['s','S','<F4>','gt'],'n',1)
         nn  s :<C-u>call Loop_themes(g:color_dir)<CR>
         nn  S :<C-u>call Loop_themes(g:color_dir,-99999)<CR>
+        nn  <F4> :<C-u>let g:_ind = g:d_loop_theme[g:color_dir][0]<CR>:let g:d_loop_theme = {}<CR>:call Loop_themes(g:color_dir,0,0,g:_ind)<CR>
+        nn gt :<C-u>exec 'e ' . g:d_loop_theme[g:color_dir][1][g:d_loop_theme[g:color_dir][0]]<CR>
     else
         echo 'Toggle_mode_loop_theme off'
         let g:_b_Toggle_mode_loop_theme = 0

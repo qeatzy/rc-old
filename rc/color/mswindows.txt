@@ -1,0 +1,7 @@
+
+[Calibrate display color] to
+    increase brightness beyond default max
+    change rgb ratio [Adjust color balance]last-step,very-good
+    [Color Management]window [Advanced]tab [Calibrate display]box ->  [Calibrate display color]window
+Display Brightness too low even when set at 100%, after updating to Windows 10 
+https://answers.microsoft.com/en-us/windows/forum/all/display-brightness-too-low-even-when-set-at-100/9f240c65-08ac-4564-867a-c76fa6032898

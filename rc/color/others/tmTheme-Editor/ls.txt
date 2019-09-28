@@ -1,0 +1,5 @@
+app/front/public/files/samples/raw/js.txt
+app/front/public/files/samples/raw/
+app/front/public/gallery.json
+
+vim: path+=~/tmp/color/tmTheme-Editor

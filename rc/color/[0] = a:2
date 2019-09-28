@@ -1,0 +1,10 @@
+func! Args(dir, ...)
+    echo has_key(a:, 1) has_key(a:, 2) has_key(a:, 3)
+    echo a:2
+endfunc
+echo "fin"
+
+call Args('path')
+call Args('path',1)
+call Args('path',1,3)
+call Args('path',1,2,3)
