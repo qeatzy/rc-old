@@ -28,6 +28,10 @@ cd ~/.vim/bundle && git clone https://github.com/jez/vim-superman
 http://www.vim.org/scripts/script.php?script_id=4582  https://github.com/vim-scripts/Conque-GDB
 http://blog.csdn.net/demorngel/article/details/73008059
 
+" new test land
+cd ~/.vim/bundle && git clone https://github.com/mattn/emmet-vim.git
+cd ~/.vim/bundle && git clone https://github.com/michaeljsmith/vim-indent-object
+
 "clipboard
 cd ~/.vim/bundle && git clone https://github.com/kana/vim-fakeclip
 https://stackoverflow.com/questions/26906289/getting-fakeclip-plugin-to-work-with-vim-and-tmux

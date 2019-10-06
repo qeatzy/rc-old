@@ -282,6 +282,7 @@ tmux-new() {
 # elif [[ "$OSTYPE" == darwin* ]]; then
 # "cygwin
 if [[ "$OSTYPE" == cygwin ]]; then
+    ulimit -n 2048
     alias firefox='/cygdrive/d/pkg/dt/firefox/firefox.exe'
     alias cmd='cygstart c:/windows/system32/cmd'
     alias cpy='/cygdrive/d/pkg/dt/Anaconda2/python'    # for plotting on windows, c for conda

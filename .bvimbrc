@@ -1,6 +1,8 @@
 # set -x
 
 co() { "$HOME/notes/swo/rc/color/themes_raw.py" "$@"; }
+e() { explorer "$@"; }
+e.() { explorer . "$@"; }
 
 # alias ll='ls -alh'      # in non-interactive shell, alias is not used.
 function ll() { ls -alh "$@"; }      # in non-interactive shell, alias is not used.

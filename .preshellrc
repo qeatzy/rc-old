@@ -12,7 +12,7 @@ fi
 }
 
 export h1='qeatzy@39.98.211.228'    # macheng 2019.08
-h0=root@144.202.74.243
+h0=root@155.138.233.254
 proxy () {
     case $1 in
         -k)

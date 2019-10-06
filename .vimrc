@@ -11,15 +11,6 @@ if !exists('g:my_current_platform')     " -- allow overridding for cygwin
     endif
 endif
 
-let s:JJJJJ = expand('<sfile>:p:h')
-func! _R()
-    exec 'source '.s:JJJJJ.'/.postvimrc'
-endfunc
-command! -nargs=0 R call _R()
-" echo 'fin'
-
-" R
-
 "setup, source cur file + copy rc/after/plugin/cmdline.vim to ~/.vim/after/**
 "vc(version-control), see " backup
 " backup .vimrc with version control system.
@@ -232,11 +223,6 @@ vnoremap <silent> <space>r :call Run_lines_as_vimscript()<CR>
 vnoremap <F2> :<c-u>exec join(getline("'<","'>"),"\n")<CR>
 nnoremap <silent> <F2> :<C-u> exec v:count1 == 1 ? getline('.') : join(getline('.',line('.')+(v:count1-1)), "\n") <CR>
 
-func! CmdAlias(lhs, rhs)
-" https://vi.stackexchange.com/questions/12872/how-to-make-command-line-abbreviations-that-only-trigger-at-begining-of-line
-exec 'cnorea <expr> ' . a:lhs . ' (getcmdtype() == ":" && getcmdline() =~ "^\s*'. a:lhs . '$")?"' . a:rhs . '":"' . a:lhs .'"'
-endfunc
-
 " <M-s> in vim's insert mode type <C-v> (or <C-q>), then type <M-s>, see what is inserted.
 inoremap s <Esc>:up<CR>
 nnoremap s :up<CR>
@@ -318,12 +304,23 @@ MapToggle ,w wrap
 " 'path' is global or local to buffer, global-local
 :exec 'set path +='.expand(g:notesBaseDir)
 let s:oldcwd =  getcwd()
-lcd <sfile>:p:h
-source .utility.vim
-exec 'lcd' fnameescape(s:oldcwd)
+let $RC_ROOT=expand('<sfile>:p:h')
+source $RC_ROOT/.utility.vim
+source $RC_ROOT/utils.vim
+" exec 'lcd' fnameescape(s:oldcwd)
 " -- cd then source used instead of exec source,
 "  for 'include' and [^i ^w^i [I [i to work properly.
 " :exec 'source <sfile>:p:h/.utility.vim'
+let s:JJJJJ = expand('<sfile>:p:h')
+func! _R()
+    exec 'source '.s:JJJJJ.'/postvimrc.vim'
+    " ln -s postvimrc.vim ~/.vim/after/plugin/postvimrc.vim    # cannot stat './.postvimrc': Too many levels of symbolic links
+    " ln -s $(realpath postvimrc.vim) ~/.vim/after/plugin/postvimrc.vim
+endfunc
+command! -nargs=0 R call _R()
+" echo 'fin'
+" R
+
 
 " no backup, set directory for swap file, '//' at the end of directory
 "+ tell vim to use the absolute path to create swap file 
@@ -1067,10 +1064,6 @@ nnoremap zm :marks<CR>
 " n  K            @<Plug>ScripteaseHelp
 " 	Last set from ~/.vim/bundle/vim-scriptease/plugin/scriptease.vim
 
-func! RemoveVimComments(type, ...) abort
-    call CmdRange('g/^\s*"/d_')
-endfunc
-
 let g:help_hist = []
 func! VimUpdateHelpHist(bufnr) abort
     let idx = index(g:help_hist, a:bufnr)
@@ -1097,9 +1090,7 @@ command! -nargs=? HH call VimGotoHelpHist(<args>)
 
 augroup vim_lang
     autocmd!
-    " autocmd Filetype vim nnoremap <buffer> ;c :call setpos("'o",getcurpos()) \| set opfunc=RemoveVimComments<CR>g@
-    autocmd Filetype vim nnoremap <buffer> <expr> ;c Op_pos('RemoveVimComments')
-    autocmd Filetype vim set iskeyword+=:
+    autocmd Filetype vim setl iskeyword+=:
     autocmd FileType vim nnoremap <buffer> <Space>k :<C-u>call Vim_help()<CR>
 autocmd FileType vim setlocal keywordprg=:help
 " note 'autocmd BufNewFile,BufRead *.mf set filetype=txt' work, whereas 'autocmd! BufNewFile,BufRead *.mf set filetype=txt' not.
@@ -1573,7 +1564,7 @@ endif
 
 " fdm fmr
 "fold, see " code
-set foldmethod=indent   " python
+set foldmethod=manual
 set foldlevel=99
 
 " verb set include " the default value works C and C++, scriptease.vim setting is good for vim file.
@@ -2137,27 +2128,6 @@ func! RemoveDocString_python() abort
     endwhile
 endfunc
 
-func! RemovePythonComments(...)
-    ko  " set mark y, same as 'k y', or 'mark y'
-    let arg1 = get(a:, 1, 0)
-    " delete doc string
-    silent keepj g/^\s*r\?"""/norm! Ve/"""\s*$"_d
-" let @q='/^\s*r\?"""\Vw/"""\s*$\"_d'
-" -- above delete docstring fails if this is template that containing """, eg, numpy/ma/core.py
-    " -- r\? for raw string, that is r""" ... """
-    silent keepj g/^\s*#/d_
-    silent! keepj %s/^\s\+$//
-    " singlize multiple empty lines
-    if arg1 == 0
-    silent keepj g/^\_$\n\_^$/d_
-    else
-    silent keepj g/^\s*$/d_
-    endif
-    " delete if first line is empty
-    silent keepj 1g/^$/d
-    norm! g`o
-endfunc
-
 func! Py_retain_header(...) abort
     let arg1 = get(a:, 1, '00')
     if arg1 == 'def'
@@ -2229,38 +2199,37 @@ command! -nargs=* M sil call Py_retain_only_method_def(<f-args>)
 nnoremap ;m :M 
 call CmdAlias('m',' M')
 
-let g:v_count_RemoveGoComments = 0
-" let g:save_pos_RemoveGoComments = 0
-func! RemoveGoComments(type, ...) abort
-    call CmdRange('g/^\s*\/\//d_')
-endfunc
-" nnoremap <F4> :<C-u> let g:v_count_RemoveGoComments = v:count \| set opfunc=RemoveGoComments<CR>g@
-" nnoremap <F4> :let g:save_pos_RemoveGoComments = getcurpos() \| set opfunc=RemoveGoComments<CR>g@
-" nnoremap <F4> :let g:save_pos_RemoveGoComments = getcurpos() | let g:v_count_RemoveGoComments = v:count | set opfunc=RemoveGoComments<CR>g@
-" nnoremap <F4> :let g:save_pos_RemoveGoComments = getcurpos() \| let g:v_count_RemoveGoComments = v:count<CR> set opfunc=RemoveGoComments<CR>g@
-" nnoremap <F4> :let g:save_pos_RemoveGoComments = getcurpos() \| set opfunc=RemoveGoComments<CR>g@
-" nnoremap <F4> :call setpos("'o",getcurpos()) \| set opfunc=RemoveGoComments<CR>g@
-
 augroup go_lang
     autocmd!
-    " autocmd Filetype go nnoremap <buffer> ;c :g/^\s*\/\//d_<CR>|"usage `33;c`
-    autocmd Filetype go nnoremap <buffer> <expr> ;c Op_pos('RemoveGoComments')
 augroup END " go_lang
 
 " https://github.com/nvie/vim-flake8
 " autocmd BufWritePost *.py call Flake8()
 " *interesting*  https://github.com/python-mode/python-mode
 "python, see " lang " ag " env
+" if  | echo 'true' | else | echo 'false' | endif
+    " export PYTHON_EXE='C:/pkg/dt/python3.7.4/python.exe'
+    if $PYTHON_EXE =~ '^[-_. :/a-zA-Z0-9]\+$'
+        " echo 'match'
+        let s:python_exe = $PYTHON_EXE
+    else
+        " echo 'not match'
+        let s:python_exe = 'python3'
+    endif
 augroup python_lang
     autocmd!
-    autocmd Filetype python nn <buffer> <space>r :<C-u>!/cygdrive/c/pkg/dt/Anaconda3/python.exe %<CR>
-    autocmd Filetype python vno <buffer> <space>r :<C-u>!/cygdrive/c/pkg/dt/Anaconda3/Scripts/ipython.exe -i %<CR>
+    if len(s:python_exe)
+        autocmd Filetype python exec 'nn <buffer> <space>r :<C-u>!"' . s:python_exe . '" %<CR>'
+    else
+        autocmd Filetype python nn <buffer> <space>r :<C-u>!python %<CR>
+        autocmd Filetype python vno <buffer> <space>r :<C-u>!ipython -i %<CR>
+    endif
 " C:\pkg\dt\Anaconda3\ipython.exe
     " autocmd Filetype python vnoremap <buffer> <space>r :call REPL_SendLines()<CR>
     autocmd Filetype python nnoremap <buffer> ]v :v/^\(class\\|def\) \w\+(.*\(\_$\n\_^[^)]*\)\{-}):/d_<CR>
     autocmd Filetype python nnoremap <buffer> ]d :<C-u>call Py_retain_only_method_def(0)<CR>
-    autocmd filetype python nnoremap <buffer> ;c :<C-u>call RemovePythonComments()<CR> 
-    autocmd filetype python nnoremap <buffer> \c :<C-u>call RemovePythonComments(1)<CR> 
+    autocmd filetype python nnoremap <buffer> ;c mo:set opfunc=RemovePythonComments<CR>g@
+    autocmd filetype python vnoremap <buffer> ;c :<C-u>call RemovePythonComments(visualmode())<CR>
     " autocmd Filetype python nnoremap <buffer> u u`p
     autocmd Filetype python nnoremap <buffer> <Leader>p :.w !python<CR>
     autocmd Filetype python nnoremap <buffer> <Leader>p :.w !python<CR>
@@ -2308,22 +2277,6 @@ autocmd Filetype sh,c,java,cpp inoremap <buffer> : :
 autocmd Filetype scheme nnoremap <buffer> <space>r :.w !scheme \| tail -n+9 > ~/.tmprun<CR><CR>:redraw!<CR>
 autocmd Filetype scheme nnoremap <buffer> <space>p :.w !guile \| tail -n+9 > ~/.tmprun<CR><CR>:redraw!<CR>
 
-" echo filereadable($HOME.'/.vim/removeccomments')
-if filereadable($HOME.'/.vim/removeccomments')
-    let g:removeccomments = $HOME.'/.vim/removeccomments'
-func! RemoveCComments(type, ...) abort
-    " sil! exe "normal! '[V']y"
-    sil! exe "normal! '[V']" . '"_y'
-    let beg = getpos("'<")[1]
-    let end = getpos("'>")[1]
-    let fn = $HOME . '/.vim/tmp/' . substitute(expand('<sfile>'), '.*\(\.\.\|\s\)', '', '') . g:pid
-    call WriteLines(fn, beg, end+1-beg)
-    exec "sil! " . beg . "," . end . "!" . g:removeccomments . " <" . fn . " ; rm -f " . fn . " &>/dev/null"
-    " call setpos('.', g:save_pos)
-    norm! g`o
-endfunc
-endif
-
 "c, see " lang
 augroup C_lang
     autocmd!
@@ -2332,8 +2285,7 @@ augroup C_lang
     autocmd Filetype cpp set path+=/usr/include/x86_64-linux-gnu/  " for eg bits/types.h, some *.h ft been set to cpp.
     autocmd Filetype c nnoremap <buffer> <space>m :make %:p:r<CR><CR>
     autocmd Filetype c nnoremap <buffer> <space>r :exec '!cd '.expand('%:p:h').' && ./'.expand('%:t:r')<CR>
-    autocmd Filetype c,cpp nnoremap <buffer> ;c :call setpos("'o",getcurpos()) \| set opfunc=RemoveCComments<CR>g@
-    " autocmd Filetype c,cpp nnoremap <buffer> ;c :let g:save_pos = getcurpos() \| set opfunc=RemoveCComments<CR>g@
+    autocmd filetype c,cpp nnoremap <buffer> ;c mo:set opfunc=RemoveCComments<CR>g@
     autocmd Filetype c call Setup_plg()
 augroup END " C_lang
 "cpp, see " lang " make
@@ -2388,29 +2340,10 @@ autocmd FileType cpp nnoremap <silent><buffer> K <Esc>:Cppman <cword><CR>
 " autocmd FileType cpp setlocal keywordprg=cppman
 " autocmd FileType cpp nnoremap <buffer> K K<CR>
 
-func! Java_remove_comments() abort
-    call cursor(1,1)
-    while 1
-        let start = search('^\s*/\*', 'c') 
-        if start == 0
-            break
-        endif
-        let end = search('^\s*\*/')
-        if end == 0 || start >= end
-            break
-        endif
-        sil exec start.','.end.'d_'
-    endwhile
-    %s/\s\+$//e
-    sil g/^\_$\n\_^$/d_
-    sil 1g/^$/d_
-endfunc
-
 "java
 augroup java_lang
     autocmd!
-    " autocmd Filetype java nnoremap <buffer> ;c :<C-u>call Java_remove_comments()<CR>
-    autocmd Filetype java  nnoremap <buffer> ;c :call setpos("'o",getcurpos()) \| set opfunc=RemoveCComments<CR>g@
+    autocmd filetype java nnoremap <buffer> ;c mo:set opfunc=RemoveCComments<CR>g@
     " if stridx($PWD, 'src') >= 0 || stridx($PWD, 'java/') >= 0
     if stridx($PWD, '/java') >= 0
         autocmd Filetype java setl tags+=$HOME/java/src_jdk1.8.0_60/java/tags
@@ -2728,14 +2661,6 @@ elseif filereadable(expand("~/.vim/bundle/vim-commentary/.gitignore"))
 nnoremap g[ :Commentary<CR>
 endif
 "cms, "comment, 1. plugin 2. native, helpful when scripts/plugin unaccessible or not work properly
-func! RemoveComments(cms)
-ky  " set mark y, same as 'k y', or 'mark y'
-sil keepj exec 'g/^\s*'.a:cms.'/d_'
-sil keepj g/^\s*\_$\n\s*\_$/d_   " remove continguous blank lines. https://stackoverflow.com/a/726158/3625404
-sil keepj 1g/^\s*$/d_
-sil! norm! g`y
-endfunc
-autocmd filetype asm nnoremap <buffer> ;c :<C-u>call RemoveComments(';')<CR> 
 " nnoremap <F10> a<Esc>:call ToggleComment()<CR><Esc>
 nmap g/ gc
 "below gC map to block comment in C-style. not work properly, from http://vim.wikia.com/wiki/Commenting_out_a_range_of_lines
