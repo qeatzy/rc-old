@@ -27,10 +27,39 @@ https://github.com/aitjcize/cppman
 cd ~/.vim/bundle && git clone https://github.com/jez/vim-superman
 http://www.vim.org/scripts/script.php?script_id=4582  https://github.com/vim-scripts/Conque-GDB
 http://blog.csdn.net/demorngel/article/details/73008059
-
+python install.py --clang-completer
 " new test land
 cd ~/.vim/bundle && git clone https://github.com/mattn/emmet-vim.git
 cd ~/.vim/bundle && git clone https://github.com/michaeljsmith/vim-indent-object
+cd ~/.vim/bundle && git clone https://github.com/SirVer/ultisnips && git clone https://github.com/honza/vim-snippets
+cd ~/.vim/bundle && git clone https://github.com/maralla/completor.vim
+cd ~/.vim/bundle && git clone https://github.com/ycm-core/YouCompleteMe
+cd ~/.vim/bundle && git clone https://github.com/skywind3000/asyncrun.vim
+
+..
+Shougo/deoplete.nvim depend on 
+  roxma/nvim-yarp                             https://github.com/roxma/nvim-yarp
+  roxma/vim-hug-neovim-rpc     EXPERIMENTAL   https://github.com/roxma/vim-hug-neovim-rpc
+    Tip: for porting neovim rplugin to vim8, you might need roxma/nvim-yarp
+  replace       https://github.com/Shougo/neocomplete.vim
+..
+https://github.com/ncm2/ncm2 
+  replace       https://github.com/roxma/nvim-completion-manager
+..
+Vim 不使用 tags 文件补全 PHP 代码 | Chrisyue's Blog
+https://www.chrisyue.com/code-auto-completion-in-vim-without-tags.html
+    phpactor + nvim-completion-manager
+..
+https://github.com/SirVer/ultisnips          initial commit on Jun 23, 2009
+https://github.com/garbas/vim-snipmate       initial commit on Feb 16, 2009
+https://github.com/Shougo/neosnippet.vim     initial commit on Feb 2, 2012
+..
+https://github.com/Shougo/neosnippet-snippets
+https://github.com/honza/vim-snippets
+..
+try vim-emmet. very good for write html.  https://github.com/mattn/emmet-vim
+emmet-vim 跳转到上一个编辑点? https://blog.zfanw.com/zencoding-vim-tutorial-chinese/
+emmet official vs 3rd party plugin. https://www.w3cplus.com/tools/emmet-cheat-sheet.html
 
 "clipboard
 cd ~/.vim/bundle && git clone https://github.com/kana/vim-fakeclip

@@ -52,7 +52,7 @@ endfunc
 nmap <silent> ;c mo:set opfunc=RemoveComments<CR>g@
 vmap <silent> ;c :<C-U>call RemoveComments(visualmode())<CR>
 
-py <<EOF
+py3 <<EOF
 import vim
 import re
 

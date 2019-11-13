@@ -148,13 +148,13 @@ alias udiff='vimdiff $HOME/notes/code/git/utility.h utility.h'
 alias vif='vim -i ~/.vim/.viminfof'    # currently fangtian
 alias vn='vim -i ~/.vim/.viminfon -c "pu_" -c "set bt=nofile" --cmd "let g:ctrlp_cache_dir=\"~/swo/.cache/ctrlp/vn\"" '     # use vn for general notes
 alias vo='vim -i ~/.vim/.viminfoo +" cd ~/tmp"'    # use vo for general notes
-alias vp='vim -i ~/.vim/.viminfop'    # use vp for python
+# alias vp='vim -i ~/.vim/.viminfop'    # use vp for python
 alias vj='vim -i ~/.vim/.viminfoj -S ~/.vim.j.session'    # use vj for java
 function vk() { set -o history && set -o histexpand; vim -i ~/.vim/.viminfok $($(history -p !!)); }
 # both vk and vkk has a problem, not work for successive ones.
 function vkk() { set -o history && set -o histexpand; eval $(history -p !!) |v-; }
-alias vb='vim -i ~/.vim/.viminfob'    # use vp for bash
-alias vbb='vim -i NONE -c "set path+=$PWD" -c "nnoremap q :q<Enter>" ~/notes/.bashrc'    # use vp for bash
+alias vb='vim -i ~/.vim/.viminfob'    # use vb for bash
+alias vbb='vim -i NONE -c "set path+=$PWD" -c "nnoremap q :q<Enter>" ~/notes/.bashrc'    # use vb for bash
 # "java
 alias lj='ls *.java'
 # alias lc='ls *.class'
@@ -292,9 +292,9 @@ alias pdf='perldoc -f'
 #  " java " python " R
 
 # "java, see "" lang
-if [[ "$OSTYPE" == cygwin && "$PATH" != *"jdk"* ]]; then
-    pathadd "/cygdrive/C/Program Files/Java/jdk1.8.0_171/bin"
-fi
+# if [[ "$OSTYPE" == cygwin && "$PATH" != *"jdk"* ]]; then
+#     pathadd "/cygdrive/C/Program Files/Java/jdk1.8.0_171/bin"
+# fi
 
 # "python, see "" lang " cygwin
 # alias pip='python -m pip'     # bad for venv, could use wrong pip

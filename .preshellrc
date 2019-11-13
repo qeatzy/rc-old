@@ -11,8 +11,11 @@ elif [ -n "$BASH_VERSION" ]; then
 fi
 }
 
+# vim profiling
+function vp() { \vim --startuptime p.out -c 'set bt=nofile' -c 'call setline(1, "p.out")' -c 'nn f gfG' -c 'nn q ZZ' "$@"; }
+
 export h1='qeatzy@39.98.211.228'    # macheng 2019.08
-h0=root@155.138.233.254
+h0=root@155.138.229.11
 proxy () {
     case $1 in
         -k)
@@ -54,6 +57,7 @@ ms() {
     fi
     return $?
 }
+msupdate() {
 for i in {0..5}; do
     if eval "[ \$h$i ]"; then
         eval "s$i() { ms $i \$h$i \"\$@\"; }"
@@ -63,6 +67,8 @@ for i in {0..5}; do
         # echo has h$i;
     fi
 done
+}
+msupdate
 
 
 min () { setid mintty --dir "${1:-$PWD}"; }

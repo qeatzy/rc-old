@@ -1,9 +1,15 @@
+# swo/rc/.tmux.conf.M-d
 # source ~/notes/rc/.tmux.conf
 # 1w !cat | sed 's/^\# //' >> ~/.tmux.conf
-unbind C-b
-set -s prefix C-d
-bind d send-prefix
-bind-key C-d last-window
+
+bind-key C-h select-pane -R    # default, right pane
+bind-key   h select-pane -R    #          right pane
+
+
+unbind C-d
+set -g prefix M-d
+bind d send C-d
+bind-key M-d last-window
 # set -g prefix C-a
 # bind a send-prefix
 # bind-key C-a last-window
@@ -45,7 +51,6 @@ bind R run ~/notes/task/tmux/toggle.sh
 # bind C-l run ~/notes/task/tmux/toggle.sh
 bind -n F11 run ~/notes/task/tmux/toggle.sh
 bind -n F5 run ~/notes/task/tmux/toggle_tab.sh
-bind -n F1 run '~/notes/task/tmux/last_window_or_swap_pane.sh "#{window_panes}" "#{session_windows}"'
 # bind -n F5 run ~/notes/task/tmux/toggle_pane_or_window.sh
 # tmux display -p -F '#{host}'
 # tmux showenv

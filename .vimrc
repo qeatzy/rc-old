@@ -121,7 +121,7 @@ endfunc
 
 func! InitWinScratch() abort
     nn <buffer> ;s :<C-u>call WinScratch('','edit',g:sz_scratch,1+v:count)<CR>
-    nn <buffer> ;e :<C-u>set ft=dirvish<CR>
+    " nn <buffer> ;e :<C-u>set ft=dirvish<CR>
 endfunc
 
 let g:sz_scratch = ''
@@ -157,7 +157,7 @@ func! Run_lines_as_shell_cmd(lno, n) abort
 endfunc
 nnoremap qr :<C-u>call Run_lines_as_shell_cmd(line('.'),v:count1)<CR>
 nnoremap gr :<C-u>call BashLinesCapture(line('.'),v:count1)<CR>
-nnoremap <F3> :<C-u>call PythonLinesCaputure(line('.'),v:count1)<CR>
+" nnoremap <F3> :<C-u>call PythonLinesCaputure(line('.'),v:count1)<CR>
 " nnoremap qr :.w !sed 's/^\$\s*//' \|bash -o pipefail<CR>
 " nnoremap qr :.w !sed 's/\r$// ; s/^\s*\$\s*\(.*\)\s*/\1/' \|bash -o pipefail<CR>
 " -- sed fails on dos fileformat, "h du" become "h $'du\r'",  "du --help" become "du $'--help\r'".  --  detected by add bash -x to qr nnoremap.
@@ -306,7 +306,9 @@ MapToggle ,w wrap
 let s:oldcwd =  getcwd()
 let $RC_ROOT=expand('<sfile>:p:h')
 source $RC_ROOT/.utility.vim
-source $RC_ROOT/utils.vim
+" call utils#init()
+so /cygdrive/e/notes/task/install/vim/dev/plugin/a.vim
+" source $RC_ROOT/utils.vim
 " exec 'lcd' fnameescape(s:oldcwd)
 " -- cd then source used instead of exec source,
 "  for 'include' and [^i ^w^i [I [i to work properly.
@@ -333,7 +335,7 @@ set undodir=~/.vim/.vimundo//
 "case, see " search
 set ignorecase smartcase
 set nohlsearch incsearch
-MapToggle <F1> hlsearch
+" MapToggle <F1> hlsearch
 set hidden
 set autoread
 set noautochdir
@@ -382,7 +384,7 @@ set shortmess+=I    " no intro message when start vim
 "plugin
 " try plugin manager, pathogen, vundle, VAM
 "+ try pathogen
-execute pathogen#infect()
+" execute pathogen#infect()
 filetype plugin indent on
 syntax enable   " syn-on
 " above line a shortcut of two line, one for plugin, one for indent
@@ -458,10 +460,10 @@ func! Buffer_left_0_right_1(cnt, is_right)
 endfunc
 
 "buffer, see " window " ctrlp " fzf
-nnoremap <Space>b :call DeleteCurBufferNotCloseWindow()<CR>
-nnoremap \b :bd #<CR>
-nnoremap <Space>; :bm<CR>
-nnoremap <Space>m :bm<CR>
+" nnoremap <Space>b :call DeleteCurBufferNotCloseWindow()<CR>
+" nnoremap \b :bd #<CR>
+" nnoremap <Space>; :bm<CR>
+" nnoremap <Space>m :bm<CR>
 " reload and force reload
 nnoremap <space>g :e<CR>
 nnoremap \g :e!<CR>
@@ -1056,7 +1058,7 @@ augroup END
 
 "info("version), see " echo " help
 nnoremap Y y$
-nnoremap zm :marks<CR>
+" nnoremap zm :marks<CR>
 "nnoremap U :map<CR>
 " invoked by 'K'.
 "help, see " info " man
@@ -1319,71 +1321,6 @@ func! s:FixCtrlPBuffer()
     endif
 endfunc
 
-"ctrlp, see " grep " fzf " denite " leaderf
-nn ;t :CtrlPSmartTabs<CR>
-nn ;g :CtrlPSmartTabs<CR>
-" Change the default mapping and the default command to invoke CtrlP: https://github.com/ctrlpvim/ctrlp.vim#basic-options
-if isdirectory($HOME.'/.vim/bundle/ctrlp.vim')
-let g:ctrlp_map = '<Space>p'
-" let g:ctrlp_cmd = 'CtrlPCurFile'
-let g:ctrlp_cmd = 'CtrlPCurWD'
-    let g:ctrlp_use_caching = 1     " use caching
-    let g:ctrlp_clear_cache_on_exit = 1   " enable cross session caching
-if executable('fd')
-    if has("win32unix")
-    let g:ctrlp_user_command = 'fd --hidden -c never "" "$(cygpath --dos %s)"'
-    else
-    let g:ctrlp_user_command = 'fd -c never "" "%s"'
-    endif
-    " let g:ctrlp_use_caching = 0
-elseif !has("win32unix") && executable('rg')
-    " cygwin path not recognized by rg binary on windows
-    " let g:ctrlp_user_command = 'rg %s -i --color=never
-    "             \ ""'
-    " let g:ctrlp_user_command = 'rg %s --files --color=never --glob ""'
-    " set grepprg=rg\ --color=never
-    let g:ctrlp_user_command = 'rg %s --files --color=never --glob ""'
-    " let g:ctrlp_user_command = 'rg --files %s'
-elseif executable('ag')
-    " below command from https://stackoverflow.com/a/32520039/3625404
-                                    " -i --ignore-case        Match case insensitively
-    let g:ctrlp_user_command = 'ag %s -i --nocolor --nogroup --hidden
-                \ --ignore .git
-                \ --ignore .svn
-                \ --ignore .hg
-                \ --ignore .DS_Store
-                \ --ignore build
-                \ --ignore debug
-                \ --ignore "**/*.html|epub"
-                \ --ignore "**/*.pyc"
-                \ --depth 8
-                \ -g ""'
-                " --depth 8 is useful for if I accidentally hit ctrl-p while editing a file in my home folder.
-    " ag is fast enough that CtrlP doesn't need to cache
-endif
-let g:ctrlp_by_filename = 1
-let g:ctrlp_brief_prompt = 1
-let g:ctrlp_tilde_homedir = 1
-nnoremap <F8> :CtrlPClearAllCaches<CR>
-nnoremap ,d :CtrlPDir<CR>
-nnoremap ,f :CtrlPMRUFiles<CR>
-nnoremap <Space>i :CtrlPBuffer<CR>
-nnoremap ;q :<C-u>if winnr('.') > 1 |
-augroup FixCtrlp
-au!
-" au WinNew call FixCtrlPBuffer()
-try
-au WinNew * call <SID>FixCtrlPBuffer()
-catch /E216/
-endtry
-augroup END
-" tag search is useful, eg, vim doc, ctags of large C/C++ project.
-nnoremap ,t :CtrlPTag<CR>
-" CtrlPLastMode not work if invoked via key mapping? works, but the ---dir option may depends on current buffer.
-nnoremap ,, :CtrlPLastMode --dir<CR>
-let g:ctrlp_open_new_file = 'r' |" r:current, v: vertical split, h: horizontal split, t: new tab
-let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
-endif
 
 "fzf, see " ctrlp(which could be too slow)
 " set rtp+=~/.vim/bundle/fzf/
@@ -1469,7 +1406,7 @@ nnoremap qf :exec 'Ack! "\b'.expand("<cword>").'\b"'<CR>
 " autocmd FileType ruby nnoremap <buffer> K :<C-u>execute 'Ack! "\bdef '. expand('<cword>'). '\b"'<CR>
 call CmdAlias('Ack',' Ack!')
     " nnoremap <space>j :<C-u>execute 'Ack! "\b'. expand('<cword>'). '\b"'<CR>
-    nnoremap <space>j :<C-u> exec 'sil! gr!'.expand('<cword>')\|cope\|redraw!<CR>
+    " nnoremap <space>j :<C-u> exec 'sil! gr!'.expand('<cword>')\|cope\|redraw!<CR>
 " search line begin, when search across file, is faster thus results less lag, if you need
 " in line search, just delete anchor '^' and do the search.
 nnoremap ;f :Ack! ^\"
@@ -1562,7 +1499,8 @@ if v:version >= 800
 set cscopequickfix=s-,c-,d-,i-,t-,e-,a-
 endif
 
-" fdm fmr
+" fdm fmr 
+" zm zr (more/reduce level)
 "fold, see " code
 set foldmethod=manual
 set foldlevel=99
@@ -1639,7 +1577,7 @@ func! OptToggle(opt)
     exec 'set ' . a:opt . '!'
     return "j\<C-h>"
 endfunc
-cnoremap <expr> <F1> (getcmdtype() =~# '[/\?]')? OptToggle('hlsearch') : '<F1>'
+" cnoremap <expr> <F1> (getcmdtype() =~# '[/\?]')? OptToggle('hlsearch') : '<F1>'
 
 "highlight, see " search " color
 " highlight word under cursor.
@@ -1824,7 +1762,7 @@ inorea reff reference
 cabbrev i^ inoremap <C-
 cabbrev n^ nnoremap <C-
 "yank
-nnoremap yg :<C-u>let @+=expand('%:p')<CR>
+" nnoremap yg :<C-u>let @+=expand('%:p')<CR>
 " yank last visual selection linewise.
 nnoremap gy mp'<y'>`p
 " yank word
@@ -2208,7 +2146,7 @@ augroup END " go_lang
 " *interesting*  https://github.com/python-mode/python-mode
 "python, see " lang " ag " env
 " if  | echo 'true' | else | echo 'false' | endif
-    " export PYTHON_EXE='C:/pkg/dt/python3.7.4/python.exe'
+    " let $PYTHON_EXE='C:/pkg/dt/python3.7.4/python.exe'
     if $PYTHON_EXE =~ '^[-_. :/a-zA-Z0-9]\+$'
         " echo 'match'
         let s:python_exe = $PYTHON_EXE
@@ -2216,14 +2154,30 @@ augroup END " go_lang
         " echo 'not match'
         let s:python_exe = 'python3'
     endif
+func! VerifyPyExeThenRun(file) abort
+    let pyexe = get(b:, 'pyexe', $PYTHON_EXE)
+    if pyexe !~# '^[-_. :/a-zA-Z0-9]*python[0-9.]*\(\.exe\)\?$'
+    " echo 'C:/pkg/dt/python3.7.4/python.exe' !~# ''
+        let pyexe = 'python3'
+    endif
+    let py_opt = (has_key(b:, 'py_opt') ? b:py_opt : get(g:, 'py_opt', ''))
+    if py_opt !~# '^-["'' a-z-]\+$'     " -m pdb -c 'until 33'
+        let py_opt = ''
+    else
+        let py_opt = escape(py_opt, "\"'")
+    endif
+    let py_redir = (has_key(b:, 'py_redir') ? b:py_redir : get(g:, 'py_redir', ''))
+    echom "[py_redir]" py_redir
+    let py_redir = (py_redir =~# '^[-_ ./:0-9a-zA-Z]\+$') ? (" > '" . py_redir . "'") : ''
+    echom "[py_redir]" py_redir "after"
+    let file = substitute(a:file, '^/cygdrive/\([c-z]\)/', '\1:/', '')
+    let cmd = '!"' . pyexe . '" ' . py_opt . ' "' . file . '"' . py_redir
+    echom "cmd [" . cmd . "]"
+    exec cmd
+endfunc " VerifyPyExeThenRun
 augroup python_lang
     autocmd!
-    if len(s:python_exe)
-        autocmd Filetype python exec 'nn <buffer> <space>r :<C-u>!"' . s:python_exe . '" %<CR>'
-    else
-        autocmd Filetype python nn <buffer> <space>r :<C-u>!python %<CR>
-        autocmd Filetype python vno <buffer> <space>r :<C-u>!ipython -i %<CR>
-    endif
+    autocmd Filetype python nn <buffer> <space>r :<C-u>call VerifyPyExeThenRun(expand('%'))<CR>
 " C:\pkg\dt\Anaconda3\ipython.exe
     " autocmd Filetype python vnoremap <buffer> <space>r :call REPL_SendLines()<CR>
     autocmd Filetype python nnoremap <buffer> ]v :v/^\(class\\|def\) \w\+(.*\(\_$\n\_^[^)]*\)\{-}):/d_<CR>
@@ -2409,16 +2363,16 @@ func! Toggle_diff_alternate_buffer() abort
     endif
 endfunc
 
-"fn, see "" file
-" call graphical file manager
-if executable('explorer')
-command! -nargs=? FM !explorer <args> &
-endif
-command! -nargs=? VV e %:p:h/<args>
-call CmdAlias('le', 'VV')
-command! -nargs=? TMUX !tmux neww -c %:p:h/<args>
-call CmdAlias('tmux', 'TMUX')
-" also config dirvish to achieve same func
+" "fn, see "" file
+" " call graphical file manager
+" if executable('explorer')
+" command! -nargs=? FM !explorer <args> &
+" endif
+" command! -nargs=? VV e %:p:h/<args>
+" call CmdAlias('le', 'VV')
+" command! -nargs=? TMUX !tmux neww -c %:p:h/<args>
+" call CmdAlias('tmux', 'TMUX')
+" " also config dirvish to achieve same func
 
 
 "file, filetype, suffixes, see " autocmd " source " suffixes " plg(bks)
@@ -2721,6 +2675,7 @@ endfunction
 " How to map Alt key?
 " 1. (break terminal window <M-f>) polyfil keycode  https://vi.stackexchange.com/a/2363/10254
 " 2. (preferred, need to manually check what <M-f> produce) map directly https://vi.stackexchange.com/a/18080/10254
+"   use <C-v> (or <C-q>) to get raw key input. :h i^v
 
 " How do I set the default window size in vim?  https://superuser.com/questions/419372/how-do-i-set-the-default-window-size-in-vim
 " set lines=64

@@ -4,6 +4,9 @@ indp_shellrc="${indp_shellrc:-.indp_shellrc}"
 . "$mydir/$indp_shellrc"
 R() { . "$mydir"/.preshellrc; }
 
+hook_cdpath() { printf '\033]51;["call", "Tapi_lcd", ["%s"]]\007' "$(pwd)"; }
+if [ "$VIM_TERMINAL" ]; then chpwd_functions+=("hook_cdpath"); fi
+
 set -k  # fix error with # symbol, enabled interactive comment
 
 # . ~/notes/.indp_shellrc
@@ -24,8 +27,7 @@ zstyle ':completion:*' preserve-prefix '//[^/]##/'
 zstyle ':completion:*' substitute 1
 zstyle ':completion*:default' menu 'select=0'
 zstyle :compinstall filename '/home/qeatzy/.zshrc'
-autoload -Uz compinit
-compinit
+autoload -Uz compinit && compinit
 
 zstyle ':completion:*' menu select
 zmodload zsh/complist
